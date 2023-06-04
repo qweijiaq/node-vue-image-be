@@ -8,5 +8,8 @@
   },
   "keywords": [],
   "author": "WeiJia <2112025700@qq.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
