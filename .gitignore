@@ -16,3 +16,6 @@ npm-debug.log*
 !.vscode/settings.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# APP
+.env*
