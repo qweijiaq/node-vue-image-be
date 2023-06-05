@@ -21,6 +21,18 @@ export const defaultErrorHandler = (
 
   // 处理异常
   switch (error.message) {
+    case 'NAME_IS_REQUIRED':
+      statusCode = 400;
+      message = '请输入用户名';
+      break;
+    case 'PASSWORD_IS_REQUIRED':
+      statusCode = 400;
+      message = '请输入密码';
+      break;
+    case 'USER_ALREADY_EXIST':
+      statusCode = 409;
+      message = '该用户名已被占用';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';
