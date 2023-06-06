@@ -45,6 +45,10 @@ export const defaultErrorHandler = (
       statusCode = 401;
       message = '请先登录';
       break;
+    case 'USER_DOES_NOT_OWN_RESOURCE':
+      statusCode = 403;
+      message = '您不具备访问该资源的权限';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';
