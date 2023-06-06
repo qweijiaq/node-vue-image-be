@@ -49,6 +49,10 @@ export const defaultErrorHandler = (
       statusCode = 403;
       message = '您不具备访问该资源的权限';
       break;
+    case 'FILE_NOT_FOUND':
+      statusCode = 404;
+      message = '您访问的资源不存在';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';
