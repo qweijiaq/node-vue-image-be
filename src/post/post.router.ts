@@ -1,6 +1,7 @@
 import express from 'express';
 import * as postControllers from './post.controller';
 import { requestUrl } from '../app/app.middleware';
+import { authGuard } from '../auth/auth.middleware';
 
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const router = express.Router();
 router.get('/posts', requestUrl, postControllers.index);
 
 // 创建内容
-router.post('/posts', postControllers.store);
+router.post('/posts', authGuard, postControllers.store);
 
 // 更新内容
 router.patch('/posts/:postId', postControllers.update);

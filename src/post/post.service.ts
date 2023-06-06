@@ -23,7 +23,7 @@ export const getPosts = async () => {
 // 创建内容
 export const createPost = async (post: PostModel) => {
   const statement = `
-      InSERT INTO post
+      INSERT INTO post
       SET ?
     `;
 

@@ -23,8 +23,10 @@ export const store = async (
   next: NextFunction,
 ) => {
   const { title, content } = req.body;
+  const { id } = req.user;
+  const user_id = parseInt(id);
   try {
-    const data = await createPost({ title, content });
+    const data = await createPost({ title, content, user_id });
     res.status(201).send(data);
   } catch (error) {
     next(error);
