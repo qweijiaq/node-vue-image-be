@@ -9,6 +9,7 @@ export const store = async (
 ) => {
   const { name } = req.body;
   try {
+    // 查看标签是否已经存在
     const tag = await getTagByName(name);
 
     if (tag) throw new Error('TAG_ALREADY_EXISTS');
