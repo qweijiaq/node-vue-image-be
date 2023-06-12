@@ -1,12 +1,13 @@
 import express from 'express';
 import * as postControllers from './post.controller';
-import { requestUrl } from '../app/app.middleware';
+// import { requestUrl } from '../app/app.middleware';
 import { authGuard, accessControl } from '../auth/auth.middleware';
+import { sort, filter } from './post.middleware';
 
 const router = express.Router();
 
 // 获取内容列表
-router.get('/posts', requestUrl, postControllers.index);
+router.get('/posts', sort, filter, postControllers.index);
 
 // 创建内容
 router.post('/posts', authGuard, postControllers.store);

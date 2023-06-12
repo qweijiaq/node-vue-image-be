@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
 
 // 输出请求地址
-export const requestUrl = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.url);
-  next();
-};
+// export const requestUrl = (req: Request, res: Response, next: NextFunction) => {
+//   console.log(req.url);
+//   next();
+// };
 
 // 默认异常处理器
 export const defaultErrorHandler = (
