@@ -69,7 +69,7 @@ export const filter = async (
   if (user && action == 'liked' && !tag) {
     req.filter = {
       name: 'userLiked',
-      sql: 'user_like_post.userId = ?',
+      sql: 'user_like_post.user_id = ?',
       param: `${user}`,
     };
   }
