@@ -5,6 +5,7 @@ import {
   updatePost,
   deletePost,
   postHasTag,
+  getPostsTotalCount,
 } from './post.service';
 import _ from 'lodash';
 import { TagModel } from '../tag/tag.model';
@@ -18,7 +19,19 @@ export const index = async (
   next: NextFunction,
 ) => {
   try {
-    const posts = await getPosts({ sort: req.sort, filter: req.filter });
+    // 统计内容数量
+    const totalCount = await getPostsTotalCount({ filter: req.filter });
+    // 设置响应头部
+    res.header('X-Total-Count', totalCount);
+  } catch (err) {
+    next(err);
+  }
+  try {
+    const posts = await getPosts({
+      sort: req.sort,
+      filter: req.filter,
+      pagination: req.pagination,
+    });
     res.send(posts);
   } catch (err) {
     next(err);

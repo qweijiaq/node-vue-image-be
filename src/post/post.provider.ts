@@ -83,13 +83,13 @@ export const sqlFragment = {
     INNER JOIN LATERAL (
         SELECT *
         FROM file
-        WHERE file.postId = post.id
+        WHERE file.post_id = post.id
         ORDER BY file.id DESC
         LIMIT 1
-    ) AS file ON post.id = file.postId
+    ) AS file ON post.id = file.post_id
     `,
   innerJoinFile: `
     INNER JOIN file
-        ON file.postId = post.id
+        ON file.post_id = post.id
     `,
 };
