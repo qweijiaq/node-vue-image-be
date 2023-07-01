@@ -43,11 +43,13 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.user},
       ${sqlFragment.totalComments},
       ${sqlFragment.file},
-      ${sqlFragment.tags}
+      ${sqlFragment.tags},
+      ${sqlFragment.totalDiggs}
       FROM post
       ${sqlFragment.leftJoinUser}
       ${sqlFragment.leftJoinOneFile}
       ${sqlFragment.leftJoinTag}
+      ${filter.name == 'userDigged' ? sqlFragment.innerJoinUserDiggPost : ''}
       WHERE ${filter.sql}
       GROUP BY post.id
       ORDER BY ${sort}
@@ -146,12 +148,13 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.innerJoinFile}
     ${sqlFragment.leftJoinTag}
+    ${filter.name == 'userDigged' ? sqlFragment.innerJoinUserDiggPost : ''}
     WHERE ${filter.sql}
   `;
-  // ${filter.name == 'userLiked' ? sqlFragment.innerJoinUserLikePost : ''}
 
   // 执行查询
   const [data] = await connection.promise().query(statement, params);
+  console.log(data[0].total);
 
   // 提供结果
   return data[0].total;

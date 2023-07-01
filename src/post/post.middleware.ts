@@ -66,10 +66,10 @@ export const filter = async (
   }
 
   // 过滤出用户赞过的内容
-  if (user && action == 'liked' && !tag) {
+  if (user && action == 'digged' && !tag) {
     req.filter = {
-      name: 'userLiked',
-      sql: 'user_like_post.user_id = ?',
+      name: 'userDigged',
+      sql: 'user_digg_post.user_id = ?',
       param: `${user}`,
     };
   }

@@ -71,16 +71,16 @@ export const sqlFragment = {
         ) AS JSON
     ) AS tags
     `,
-  totalLikes: `
+  totalDiggs: `
     (
-        SELECT COUNT(user_like_post.postId)
-        FROM user_like_post
-        WHERE user_like_post.postId = post.id
-    ) AS totalLikes
+        SELECT COUNT(user_digg_post.post_id)
+        FROM user_digg_post
+        WHERE user_digg_post.post_id = post.id
+    ) AS totalDiggs
     `,
-  innerJoinUserLikePost: `
-    INNER JOIN user_like_post
-        ON user_like_post.postId = post.id
+  innerJoinUserDiggPost: `
+    INNER JOIN user_digg_post
+        ON user_digg_post.post_id = post.id
     `,
   innerJoinOneFile: `
     INNER JOIN LATERAL (
