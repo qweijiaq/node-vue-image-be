@@ -154,7 +154,6 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
 
   // 执行查询
   const [data] = await connection.promise().query(statement, params);
-  console.log(data[0].total);
 
   // 提供结果
   return data[0].total;

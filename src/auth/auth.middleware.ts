@@ -46,7 +46,6 @@ export const authGuard = (req: Request, res: Response, next: NextFunction) => {
 
     next();
   } catch (err) {
-    console.log(err);
     next(new Error('UNAUTHORIZED'));
   }
 };
