@@ -4,7 +4,10 @@ import {
   deleteComment,
   isReplyComment,
   updateComment,
+  getComments,
+  getCommentReplies,
 } from './comment.service';
+import { getCommentsTotalCount } from './comment.service';
 
 // 发表评论
 export const store = async (
@@ -112,4 +115,60 @@ export const destroy = async (
     // 做出响应
     res.send(data);
   } catch (error) {}
+};
+
+/**
+ * 评论列表
+ */
+export const index = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // 统计评论数量
+  try {
+    const totalCount = await getCommentsTotalCount({ filter: req.filter });
+
+    // 设置响应头部
+    res.header('X-Total-Count', totalCount);
+  } catch (error) {
+    next(error);
+  }
+
+  // 获取评论列表
+  try {
+    const comments = await getComments({
+      filter: req.filter,
+      pagination: req.pagination,
+    });
+
+    // 做出响应
+    res.send(comments);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 回复列表
+ */
+export const indexReplies = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // 准备数据
+  const { commentId } = req.params;
+
+  // 获取评论回复列表
+  try {
+    const replies = await getCommentReplies({
+      commentId: parseInt(commentId, 10),
+    });
+
+    // 做出响应
+    res.send(replies);
+  } catch (error) {
+    next(error);
+  }
 };

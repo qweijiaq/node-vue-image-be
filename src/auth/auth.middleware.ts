@@ -22,7 +22,7 @@ export const ValidateLoginData = async (
 
   // 验证用户密码
   const matched = await bcrypt.compare(password, user.password);
-  if (!matched) return next(new Error('PASSWORD_DOST_NOT_MATCH'));
+  if (!matched) return next(new Error('PASSWORD_DOES_NOT_MATCH'));
 
   // 在请求主体中添加用户
   req.body.user = user;

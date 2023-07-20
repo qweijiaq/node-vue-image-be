@@ -159,3 +159,55 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
   // 提供结果
   return data[0].total;
 };
+
+/**
+ * 按 ID 调取内容
+ */
+// export interface GetPostByIdOptions {
+//   currentUser?: TokenPayload;
+// }
+
+export const getPostById = async (
+  post_id: number,
+  // options: GetPostByIdOptions = {},
+) => {
+  // const {
+  //   currentUser: { id: user_id },
+  // } = options;
+
+  // 准备查询
+  const statement = `
+    SELECT
+      post.id,
+      post.title,
+      post.content,
+      ${sqlFragment.user},
+      ${sqlFragment.totalComments},
+      ${sqlFragment.file},
+      ${sqlFragment.tags},
+      ${sqlFragment.totalDiggs}
+    FROM post
+    ${sqlFragment.leftJoinUser}
+    ${sqlFragment.leftJoinOneFile}
+    ${sqlFragment.leftJoinTag}
+    WHERE post.id = ?
+  `;
+  // (
+  //   SELECT COUNT(user_digg_post.postId)
+  //   FROM user_digg_post
+  //   WHERE
+  //     user_like_post.post_id = post.id
+  //     && user_digg_post.user_id = ${user_id}
+  // ) AS liked
+
+  // 执行查询
+  const [data] = await connection.promise().query(statement, post_id);
+
+  // 没找到内容
+  if (!data[0].id) {
+    throw new Error('NOT_FOUND');
+  }
+
+  // 提供数据
+  return data[0];
+};

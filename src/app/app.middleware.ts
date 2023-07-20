@@ -37,7 +37,7 @@ export const defaultErrorHandler = (
       statusCode = 400;
       message = '该用户不存在';
       break;
-    case 'PASSWORD_DOST_NOT_MATCH':
+    case 'PASSWORD_DOES_NOT_MATCH':
       statusCode = 400;
       message = '用户名或密码错误';
       break;
@@ -64,6 +64,18 @@ export const defaultErrorHandler = (
     case 'UNABLE_TO_REPLY_THIS_COMMENT':
       statusCode = 400;
       message = '无法回复这条评论';
+      break;
+    case 'NOT_FOUND':
+      statusCode = 404;
+      message = '找不到该内容~~ 🦕';
+      break;
+    case 'USER_NOT_FOUND':
+      statusCode = 404;
+      message = '找不到该用户~~';
+      break;
+    case 'PASSWORD_IS_THE_SAME':
+      statusCode = 400;
+      message = '要修改的密码不能与原密码一样';
       break;
     default:
       statusCode = 500;

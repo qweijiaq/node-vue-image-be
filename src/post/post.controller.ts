@@ -6,6 +6,7 @@ import {
   deletePost,
   postHasTag,
   getPostsTotalCount,
+  getPostById,
 } from './post.service';
 import _ from 'lodash';
 import { TagModel } from '../tag/tag.model';
@@ -147,5 +148,21 @@ export const destroyPostTag = async (
     res.send('移除内容标签成功');
   } catch (err) {
     next(err);
+  }
+};
+
+// 单个内容
+export const show = async (req: Request, res: Response, next: NextFunction) => {
+  // 准备数据
+  const { post_id } = req.params;
+
+  // 调取内容
+  try {
+    const post = await getPostById(parseInt(post_id, 10));
+
+    // 做出响应
+    res.send(post);
+  } catch (error) {
+    next(error);
   }
 };
