@@ -12,6 +12,7 @@ import _ from 'lodash';
 import { TagModel } from '../tag/tag.model';
 import { getTagByName, createTag } from '../tag/tag.service';
 import { createPostTag, deletePostTag } from './post.service';
+import { getPostFiles, deletePostFiles } from '../file/file.service';
 
 // 获取内容列表
 export const index = async (
@@ -19,6 +20,7 @@ export const index = async (
   res: Response,
   next: NextFunction,
 ) => {
+  console.log(req.user);
   try {
     // 统计内容数量
     const totalCount = await getPostsTotalCount({ filter: req.filter });
@@ -32,6 +34,7 @@ export const index = async (
       sort: req.sort,
       filter: req.filter,
       pagination: req.pagination,
+      currentUser: req.user,
     });
     res.send(posts);
   } catch (err) {
@@ -80,7 +83,13 @@ export const destroy = async (
   next: NextFunction,
 ) => {
   const { postId } = req.params;
+  console.log(postId);
   try {
+    const files = await getPostFiles(parseInt(postId, 10));
+    if (files.length) {
+      console.log(files);
+      await deletePostFiles(files);
+    }
     const data = await deletePost(parseInt(postId, 10));
     res.send(data);
   } catch (err) {
@@ -158,7 +167,9 @@ export const show = async (req: Request, res: Response, next: NextFunction) => {
 
   // 调取内容
   try {
-    const post = await getPostById(parseInt(post_id, 10));
+    const post = await getPostById(parseInt(post_id, 10), {
+      currentUser: req.user,
+    });
 
     // 做出响应
     res.send(post);

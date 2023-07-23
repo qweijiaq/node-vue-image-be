@@ -32,22 +32,48 @@ export const ValidateLoginData = async (
 
 // 验证用户身份
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // 提取 authorization
-    const authorization = req.header('Authorization');
-    if (!authorization) throw new Error();
-    // 提取 JWT 令牌
-    const token = authorization.replace('Bearer ', '');
-    if (!token) throw new Error();
-    // 验证令牌
-    const decoded = jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] });
-    // 在请求里添加当前用户
-    req.user = decoded as TokenPayload;
-
+  if (req.user.id) {
     next();
-  } catch (err) {
+  } else {
     next(new Error('UNAUTHORIZED'));
   }
+};
+
+/**
+ * 当前用户
+ */
+export const currentUser = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  let user: TokenPayload = {
+    // 未登录的用户
+    id: null,
+    name: 'anonymous',
+  };
+
+  try {
+    // 提取 Authorization
+    const authorization = req.header('Authorization');
+
+    // 提取 JWT 令牌
+    const token = authorization.replace('Bearer ', '');
+
+    if (token) {
+      // 验证令牌
+      const decoded = jwt.verify(token, PUBLIC_KEY, {
+        algorithms: ['RS256'],
+      });
+
+      user = decoded as TokenPayload;
+    }
+  } catch (error) {}
+
+  // 在请求里添加当前用户
+  req.user = user;
+
+  next();
 };
 
 // 访问控制

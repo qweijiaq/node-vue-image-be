@@ -1,6 +1,8 @@
 import { connection } from '../app/database/mysql';
 import { PostModel } from './post.model';
 import { sqlFragment } from './post.provider';
+import { currentUser } from '../auth/auth.middleware';
+import { TokenPayload } from '../../src/auth/auth.interface';
 
 // 获取内容列表
 export interface GetPostsOptionsFilter {
@@ -18,6 +20,7 @@ interface GetPostsOptions {
   sort?: string;
   filter?: GetPostsOptionsFilter;
   pagination?: GetPostsOptionsPagination;
+  currentUser?: TokenPayload;
 }
 
 export const getPosts = async (options: GetPostsOptions) => {
@@ -25,6 +28,7 @@ export const getPosts = async (options: GetPostsOptions) => {
     sort,
     filter,
     pagination: { limit, offset },
+    currentUser,
   } = options;
 
   // SQL 参数
@@ -35,6 +39,9 @@ export const getPosts = async (options: GetPostsOptions) => {
     params = [filter.param, ...params];
   }
 
+  // 当前用户
+  const { id: userId } = currentUser;
+
   const statement = `
     SELECT
       post.id,
@@ -44,10 +51,17 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.totalComments},
       ${sqlFragment.file},
       ${sqlFragment.tags},
-      ${sqlFragment.totalDiggs}
+      ${sqlFragment.totalDiggs},
+      (
+        SELECT COUNT(user_digg_post.post_id)
+        FROM user_digg_post
+        WHERE
+          user_digg_post.post_id = post.id
+          && user_digg_post.user_id = ${userId}
+      ) as digged
       FROM post
       ${sqlFragment.leftJoinUser}
-      ${sqlFragment.leftJoinOneFile}
+      ${sqlFragment.innerJoinOneFile}
       ${sqlFragment.leftJoinTag}
       ${filter.name == 'userDigged' ? sqlFragment.innerJoinUserDiggPost : ''}
       WHERE ${filter.sql}
@@ -162,17 +176,17 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
 /**
  * 按 ID 调取内容
  */
-// export interface GetPostByIdOptions {
-//   currentUser?: TokenPayload;
-// }
+export interface GetPostByIdOptions {
+  currentUser?: TokenPayload;
+}
 
 export const getPostById = async (
   post_id: number,
-  // options: GetPostByIdOptions = {},
+  options: GetPostByIdOptions = {},
 ) => {
-  // const {
-  //   currentUser: { id: user_id },
-  // } = options;
+  const {
+    currentUser: { id: user_id },
+  } = options;
 
   // 准备查询
   const statement = `
@@ -184,20 +198,20 @@ export const getPostById = async (
       ${sqlFragment.totalComments},
       ${sqlFragment.file},
       ${sqlFragment.tags},
-      ${sqlFragment.totalDiggs}
-    FROM post
+      ${sqlFragment.totalDiggs},
+      (
+        SELECT COUNT(user_digg_post.post_id)
+        FROM user_digg_post
+        WHERE
+          user_digg_post.post_id = post.id
+          && user_digg_post.user_id = ${user_id}
+      ) AS digged
+      FROM post
     ${sqlFragment.leftJoinUser}
-    ${sqlFragment.leftJoinOneFile}
+    ${sqlFragment.innerJoinOneFile}
     ${sqlFragment.leftJoinTag}
     WHERE post.id = ?
   `;
-  // (
-  //   SELECT COUNT(user_digg_post.postId)
-  //   FROM user_digg_post
-  //   WHERE
-  //     user_like_post.post_id = post.id
-  //     && user_digg_post.user_id = ${user_id}
-  // ) AS liked
 
   // 执行查询
   const [data] = await connection.promise().query(statement, post_id);

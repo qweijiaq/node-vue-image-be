@@ -30,8 +30,8 @@ router.patch(
 // 删除内容
 router.delete(
   '/posts/:postId',
+  authGuard,
   accessControl({ possession: true }),
-  postControllers.update,
   postControllers.destroy,
 );
 
