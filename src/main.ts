@@ -1,7 +1,7 @@
 import app from './app';
 import { APP_PORT } from './app/app.config';
 import { connection } from './app/database/mysql';
-import httpServer from './app/app.service';
+import httpServer from './app/app.server';
 
 httpServer.listen(Number(APP_PORT), () => console.log(`🚀 服务已启动！`));
 

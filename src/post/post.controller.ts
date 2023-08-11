@@ -20,7 +20,6 @@ export const index = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.user);
   try {
     // 统计内容数量
     const totalCount = await getPostsTotalCount({ filter: req.filter });
@@ -83,11 +82,9 @@ export const destroy = async (
   next: NextFunction,
 ) => {
   const { postId } = req.params;
-  console.log(postId);
   try {
     const files = await getPostFiles(parseInt(postId, 10));
     if (files.length) {
-      console.log(files);
       await deletePostFiles(files);
     }
     const data = await deletePost(parseInt(postId, 10));

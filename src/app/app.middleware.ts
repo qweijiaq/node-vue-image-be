@@ -1,11 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 
-// 输出请求地址
-// export const requestUrl = (req: Request, res: Response, next: NextFunction) => {
-//   console.log(req.url);
-//   next();
-// };
-
 // 默认异常处理器
 export const defaultErrorHandler = (
   error: any,
@@ -35,7 +29,7 @@ export const defaultErrorHandler = (
       break;
     case 'USER_DOES_NOT_EXIST':
       statusCode = 400;
-      message = '该用户不存在';
+      message = '用户名或密码错误';
       break;
     case 'PASSWORD_DOES_NOT_MATCH':
       statusCode = 400;

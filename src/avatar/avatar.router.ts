@@ -1,7 +1,7 @@
 import express from 'express';
 import * as avatarController from './avatar.controller';
 import { authGuard } from '../auth/auth.middleware';
-import { avatarInterceptor, avatarProcessor } from './avatar.middleware';
+import { avatarProcessor, avatarInterceptor } from './avatar.middleware';
 
 const router = express.Router();
 

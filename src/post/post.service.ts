@@ -206,7 +206,7 @@ export const getPostById = async (
           user_digg_post.post_id = post.id
           && user_digg_post.user_id = ${user_id}
       ) AS digged
-      FROM post
+    FROM post
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.innerJoinOneFile}
     ${sqlFragment.leftJoinTag}
