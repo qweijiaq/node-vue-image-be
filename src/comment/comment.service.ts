@@ -14,7 +14,7 @@ export const createComment = async (comment: CommentModel) => {
     `;
   const [data] = await connection.promise().query(statement, comment);
 
-  return data;
+  return data as any;
 };
 
 // 检测评论是否是回复评论
@@ -186,4 +186,40 @@ export const getCommentReplies = async (options: GetCommentRepliesOptions) => {
 
   // 提供数据
   return data;
+};
+
+/**
+ * 按 ID 调取评论或回复
+ */
+interface GetCommentByIdOptions {
+  resourceType?: string;
+}
+
+export const getCommentById = async (
+  commentId: number,
+  options: GetCommentByIdOptions = {},
+) => {
+  const { resourceType = 'comment' } = options;
+  const params: Array<any> = [commentId];
+  const statement = `
+    SELECT
+      comment.id,
+      comment.content,
+      ${sqlFragment.user},
+      ${sqlFragment.post}
+      ${resourceType === 'reply' ? `, ${sqlFragment.repliedComment}` : ''}
+      ${resourceType === 'comment' ? `, ${sqlFragment.totalReplies}` : ''}
+    FROM
+      comment
+    ${sqlFragment.leftJoinUser}
+    ${sqlFragment.leftJoinPost}
+
+    WHERE
+      comment.id = ?
+  `;
+
+  // 执行查询
+  const [data] = await connection.promise().query(statement, params);
+
+  return data[0] as any;
 };
