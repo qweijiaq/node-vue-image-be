@@ -38,7 +38,15 @@ export const filter = async (
   next: NextFunction,
 ) => {
   // 解构查询符
-  const { tag, user, action } = req.query;
+  const {
+    tag,
+    user,
+    action,
+    cameraMake,
+    cameraModel,
+    lensMake,
+    lensModel,
+  } = req.query;
 
   // 设置默认的过滤
   req.filter = {
@@ -70,6 +78,24 @@ export const filter = async (
       name: 'userDigged',
       sql: 'user_digg_post.user_id = ?',
       param: `${user}`,
+    };
+  }
+
+  // 过滤出用某种相机拍摄的内容
+  if (cameraMake && cameraModel) {
+    req.filter = {
+      name: 'camera',
+      sql: `file.metadata->'$.Make' = ? AND file.metadata->'$.Model' = ?`,
+      params: [`${cameraMake}`, `${cameraModel}`],
+    };
+  }
+
+  // 过滤出用某种镜头拍摄的内容
+  if (lensMake && lensModel) {
+    req.filter = {
+      name: 'lens',
+      sql: `file.metadata->'$.LensMake' = ? AND file.metadata->'$.LensModel' = ?`,
+      params: [`${lensMake}`, `${lensModel}`],
     };
   }
 

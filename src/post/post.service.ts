@@ -9,6 +9,7 @@ export interface GetPostsOptionsFilter {
   name: string;
   sql?: string;
   param?: string;
+  params?: Array<string>;
 }
 
 export interface GetPostsOptionsPagination {
@@ -37,6 +38,10 @@ export const getPosts = async (options: GetPostsOptions) => {
   // 设置 SQL 参数
   if (filter.param) {
     params = [filter.param, ...params];
+  }
+
+  if (filter.params) {
+    params = [...filter.params, ...params];
   }
 
   // 当前用户
@@ -153,6 +158,10 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
 
   // SQL 参数
   let params = [filter.param];
+
+  if (filter.params) {
+    params = [...filter.params, ...params];
+  }
 
   // 准备查询
   const statement = `
