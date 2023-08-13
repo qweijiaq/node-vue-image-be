@@ -79,6 +79,10 @@ export const defaultErrorHandler = (
       statusCode = 403;
       message = '没有权限访问';
       break;
+    case 'USER_DOES_NOT_OWN_RESOURCE':
+      statusCode = 403;
+      message = '您无法处理这个请求';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';

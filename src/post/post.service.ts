@@ -3,6 +3,7 @@ import { PostModel } from './post.model';
 import { sqlFragment } from './post.provider';
 import { currentUser } from '../auth/auth.middleware';
 import { TokenPayload } from '../../src/auth/auth.interface';
+import { AuditLogStatus } from '../audit-log/audit-log.model';
 
 // 获取内容列表
 export interface GetPostsOptionsFilter {
@@ -29,6 +30,7 @@ interface GetPostsOptions {
   pagination?: GetPostsOptionsPagination;
   currentUser?: TokenPayload;
   status?: PostStatus;
+  auditStatus?: AuditLogStatus;
 }
 
 export const getPosts = async (options: GetPostsOptions) => {
@@ -38,6 +40,7 @@ export const getPosts = async (options: GetPostsOptions) => {
     pagination: { limit, offset },
     currentUser,
     status,
+    auditStatus,
   } = options;
 
   // SQL 参数
@@ -60,6 +63,11 @@ export const getPosts = async (options: GetPostsOptions) => {
     ? `post.status = '${status}'`
     : 'post.status IS NOT NULL';
 
+  // 审核状态
+  const whereAuditStatus = auditStatus
+    ? `AND audit.status='${auditStatus}'`
+    : '';
+
   const statement = `
     SELECT
       post.id,
@@ -71,6 +79,7 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.file},
       ${sqlFragment.tags},
       ${sqlFragment.totalDiggs},
+      ${sqlFragment.audit},
       (
         SELECT COUNT(user_digg_post.post_id)
         FROM user_digg_post
@@ -82,8 +91,9 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.leftJoinUser}
       ${sqlFragment.innerJoinOneFile}
       ${sqlFragment.leftJoinTag}
+      ${sqlFragment.leftJoinOneAuditLog}
       ${filter.name == 'userDigged' ? sqlFragment.innerJoinUserDiggPost : ''}
-      WHERE ${filter.sql} AND ${whereStatus}
+      WHERE ${filter.sql} AND ${whereStatus} ${whereAuditStatus}
       GROUP BY post.id
       ORDER BY ${sort}
       LIMIT ?
@@ -168,7 +178,7 @@ export const deletePostTag = async (post_id: number, tag_id: number) => {
 
 // 统计内容数量
 export const getPostsTotalCount = async (options: GetPostsOptions) => {
-  const { filter, status } = options;
+  const { filter, status, auditStatus } = options;
 
   // SQL 参数
   let params = [filter.param];
@@ -182,6 +192,11 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
     ? `post.status = '${status}'`
     : 'post.status IS NOT NULL';
 
+  // 审核状态
+  const whereAuditStatus = auditStatus
+    ? `AND audit.status='${auditStatus}'`
+    : '';
+
   // 准备查询
   const statement = `
     SELECT
@@ -190,8 +205,9 @@ export const getPostsTotalCount = async (options: GetPostsOptions) => {
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.innerJoinFile}
     ${sqlFragment.leftJoinTag}
+    ${sqlFragment.leftJoinOneAuditLog}
     ${filter.name == 'userDigged' ? sqlFragment.innerJoinUserDiggPost : ''}
-    WHERE ${filter.sql} AND ${whereStatus}
+    WHERE ${filter.sql} AND ${whereStatus} ${whereAuditStatus}
   `;
 
   // 执行查询
@@ -228,6 +244,7 @@ export const getPostById = async (
       ${sqlFragment.file},
       ${sqlFragment.tags},
       ${sqlFragment.totalDiggs},
+      ${sqlFragment.audit},
       (
         SELECT COUNT(user_digg_post.post_id)
         FROM user_digg_post
@@ -239,6 +256,7 @@ export const getPostById = async (
     ${sqlFragment.leftJoinUser}
     ${sqlFragment.innerJoinOneFile}
     ${sqlFragment.leftJoinTag}
+    ${sqlFragment.leftJoinOneAuditLog}
     WHERE post.id = ?
   `;
 

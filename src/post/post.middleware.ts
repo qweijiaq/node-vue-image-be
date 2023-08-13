@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { AuditLogStatus } from '../audit-log/audit-log.model';
 import { PostStatus } from './post.service';
 
 // 排序方式
@@ -161,7 +162,8 @@ export const modelSwitch = async (
   const isManageMode = manage === 'true';
 
   // 管理员模式
-  const isAdminMode = isManageMode && admin === 'true' && req.user.id === '1';
+  const isAdminMode =
+    isManageMode && admin === 'true' && parseInt(req.user.id) === 1;
 
   if (isManageMode) {
     if (isAdminMode) {
@@ -180,6 +182,7 @@ export const modelSwitch = async (
   } else {
     // 普通模式
     req.query.status = PostStatus.published;
+    req.query.auditStatus = AuditLogStatus.approved;
   }
 
   next();

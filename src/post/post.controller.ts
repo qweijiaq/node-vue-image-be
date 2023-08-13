@@ -15,6 +15,8 @@ import { getTagByName, createTag } from '../tag/tag.service';
 import { createPostTag, deletePostTag } from './post.service';
 import { getPostFiles, deletePostFiles } from '../file/file.service';
 import { PostModel } from './post.model';
+import { getAuditLogByResource } from '../audit-log/audit-log.service';
+import { AuditLogStatus } from '../audit-log/audit-log.model';
 
 // 获取内容列表
 export const index = async (
@@ -24,9 +26,17 @@ export const index = async (
 ) => {
   let status: any;
   status = req.query.status || '';
+
+  let auditStatus: any;
+  auditStatus = req.query.auditStatus;
+
   try {
     // 统计内容数量
-    const totalCount = await getPostsTotalCount({ filter: req.filter, status });
+    const totalCount = await getPostsTotalCount({
+      filter: req.filter,
+      status,
+      auditStatus,
+    });
     // 设置响应头部
     res.header('X-Total-Count', totalCount);
   } catch (err) {
@@ -39,6 +49,7 @@ export const index = async (
       pagination: req.pagination,
       currentUser: req.user,
       status,
+      auditStatus,
     });
     res.send(posts);
   } catch (err) {
@@ -183,10 +194,17 @@ export const show = async (req: Request, res: Response, next: NextFunction) => {
       currentUser,
     });
 
+    // 审核日志
+    const [auditLog] = await getAuditLogByResource({
+      resourceId: parseInt(post_id, 10),
+      resourceType: 'post',
+    });
+
     const ownPost = post.user.id === currentUser.id;
     const isAdmin = currentUser.id === '1';
     const isPublished = post.status === PostStatus.published;
-    const canAccess = isAdmin || ownPost || isPublished;
+    const isApproved = auditLog && auditLog.status === AuditLogStatus.approved;
+    const canAccess = isAdmin || ownPost || (isPublished && isApproved);
 
     if (!canAccess) {
       throw new Error('FORBIDDEN');
