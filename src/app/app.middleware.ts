@@ -71,6 +71,14 @@ export const defaultErrorHandler = (
       statusCode = 400;
       message = '要修改的密码不能与原密码一样';
       break;
+    case 'BAD_REQUEST':
+      statusCode = 400;
+      message = '无法处理您的请求';
+      break;
+    case 'FORBIDDEN':
+      statusCode = 403;
+      message = '没有权限访问';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';

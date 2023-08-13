@@ -7,12 +7,14 @@ import {
   postHasTag,
   getPostsTotalCount,
   getPostById,
+  PostStatus,
 } from './post.service';
 import _ from 'lodash';
 import { TagModel } from '../tag/tag.model';
 import { getTagByName, createTag } from '../tag/tag.service';
 import { createPostTag, deletePostTag } from './post.service';
 import { getPostFiles, deletePostFiles } from '../file/file.service';
+import { PostModel } from './post.model';
 
 // 获取内容列表
 export const index = async (
@@ -20,9 +22,11 @@ export const index = async (
   res: Response,
   next: NextFunction,
 ) => {
+  let status: any;
+  status = req.query.status || '';
   try {
     // 统计内容数量
-    const totalCount = await getPostsTotalCount({ filter: req.filter });
+    const totalCount = await getPostsTotalCount({ filter: req.filter, status });
     // 设置响应头部
     res.header('X-Total-Count', totalCount);
   } catch (err) {
@@ -34,6 +38,7 @@ export const index = async (
       filter: req.filter,
       pagination: req.pagination,
       currentUser: req.user,
+      status,
     });
     res.send(posts);
   } catch (err) {
@@ -47,11 +52,20 @@ export const store = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { title, content } = req.body;
+  const { title, content, status = PostStatus.draft } = req.body;
   const { id } = req.user;
   const user_id = parseInt(id);
+
+  console.log(status);
+
+  const post: PostModel = {
+    title,
+    content,
+    user_id,
+    status,
+  };
   try {
-    const data = await createPost({ title, content, user_id });
+    const data = await createPost(post);
     res.status(201).send(data);
   } catch (error) {
     next(error);
@@ -65,7 +79,7 @@ export const update = async (
   next: NextFunction,
 ) => {
   const { postId } = req.params;
-  const post = _.pick(req.body, ['title', 'content']);
+  const post = _.pick(req.body, ['title', 'content', 'status']);
 
   try {
     const data = await updatePost(parseInt(postId, 10), post);
@@ -161,12 +175,22 @@ export const destroyPostTag = async (
 export const show = async (req: Request, res: Response, next: NextFunction) => {
   // 准备数据
   const { post_id } = req.params;
+  const { user: currentUser } = req;
 
   // 调取内容
   try {
     const post = await getPostById(parseInt(post_id, 10), {
-      currentUser: req.user,
+      currentUser,
     });
+
+    const ownPost = post.user.id === currentUser.id;
+    const isAdmin = currentUser.id === '1';
+    const isPublished = post.status === PostStatus.published;
+    const canAccess = isAdmin || ownPost || isPublished;
+
+    if (!canAccess) {
+      throw new Error('FORBIDDEN');
+    }
 
     // 做出响应
     res.send(post);

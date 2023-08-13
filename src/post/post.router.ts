@@ -2,7 +2,13 @@ import express from 'express';
 import * as postControllers from './post.controller';
 // import { requestUrl } from '../app/app.middleware';
 import { authGuard, accessControl } from '../auth/auth.middleware';
-import { sort, filter, paginate } from './post.middleware';
+import {
+  sort,
+  filter,
+  paginate,
+  validatePostStatus,
+  modelSwitch,
+} from './post.middleware';
 import { POSTS_PER_PAGE } from '../app/app.config';
 
 const router = express.Router();
@@ -13,17 +19,20 @@ router.get(
   sort,
   filter,
   paginate(POSTS_PER_PAGE),
+  validatePostStatus,
+  modelSwitch,
   postControllers.index,
 );
 
 // 创建内容
-router.post('/posts', authGuard, postControllers.store);
+router.post('/posts', authGuard, validatePostStatus, postControllers.store);
 
 // 更新内容
 router.patch(
   '/posts/:postId',
   authGuard,
   accessControl({ possession: true }),
+  validatePostStatus,
   postControllers.update,
 );
 

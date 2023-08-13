@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { PostStatus } from './post.service';
 
 // 排序方式
 export const sort = async (req: Request, res: Response, next: NextFunction) => {
@@ -121,4 +122,65 @@ export const paginate = (itemsPerPage: number) => {
     // 下一步
     next();
   };
+};
+
+/**
+ * 验证内容状态
+ */
+export const validatePostStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { status: statusFromQuery } = req.query;
+  const { status: statusFromBody = '' } = req.body;
+
+  const status = statusFromQuery || statusFromBody;
+
+  // 检查内容状态是否有效
+  const isValidStatus = ['published', 'draft', 'archived', ''].includes(status);
+
+  if (!isValidStatus) {
+    next(new Error('BAD_REQUEST'));
+  } else {
+    next();
+  }
+};
+
+/**
+ * 模式切换器
+ */
+export const modelSwitch = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  let { manage, admin } = req.query;
+
+  // 管理模式
+  const isManageMode = manage === 'true';
+
+  // 管理员模式
+  const isAdminMode = isManageMode && admin === 'true' && req.user.id === '1';
+
+  if (isManageMode) {
+    if (isAdminMode) {
+      req.filter = {
+        name: 'adminManagePosts',
+        sql: 'post.id IS NOT NULL',
+        param: '',
+      };
+    } else {
+      req.filter = {
+        name: 'userManagePosts',
+        sql: 'user.id = ?',
+        param: `${req.user.id}`,
+      };
+    }
+  } else {
+    // 普通模式
+    req.query.status = PostStatus.published;
+  }
+
+  next();
 };
