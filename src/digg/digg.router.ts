@@ -10,7 +10,7 @@ router.post(
   '/posts/:post_id/digg',
   authGuard,
   accessLog({
-    action: '点赞内容',
+    action: 'createUserDiggPost',
     resourceType: 'post',
     resourceParamName: 'post_id',
   }),

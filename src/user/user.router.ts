@@ -18,7 +18,7 @@ router.post(
   ValidateUserData,
   hashPassword,
   accessLog({
-    action: '创建用户',
+    action: 'createUser',
     resourceType: 'user',
     payloadParam: 'body.name',
   }),

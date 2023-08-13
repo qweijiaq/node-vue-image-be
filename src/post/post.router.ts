@@ -22,7 +22,7 @@ router.get(
   paginate(POSTS_PER_PAGE),
   validatePostStatus,
   modelSwitch,
-  accessLog({ action: '获取内容列表', resourceType: 'post' }),
+  accessLog({ action: 'getPosts', resourceType: 'post' }),
   postControllers.index,
 );
 
@@ -32,7 +32,7 @@ router.post(
   authGuard,
   validatePostStatus,
   accessLog({
-    action: '创建内容',
+    action: 'createPost',
     resourceType: 'post',
     payloadParam: 'body.title',
   }),
@@ -98,7 +98,7 @@ router.delete(
 router.get(
   '/posts/:post_id',
   accessLog({
-    action: '访问单个内容',
+    action: 'getPostById',
     resourceType: 'post',
     resourceParamName: 'post_id',
   }),

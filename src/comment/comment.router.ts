@@ -13,7 +13,7 @@ router.post(
   '/comments',
   authGuard,
   accessLog({
-    action: '发布评论',
+    action: 'createComment',
     resourceType: 'comment',
     payloadParam: 'body.content',
   }),

@@ -10,7 +10,7 @@ const router = express.Router();
 router.get(
   '/search/tags',
   accessLog({
-    action: '搜索标签',
+    action: 'searchTags',
     resourceType: 'search',
     payloadParam: 'query.name',
   }),
@@ -23,7 +23,7 @@ router.get(
 router.get(
   '/search/users',
   accessLog({
-    action: '搜索用户',
+    action: 'searchUsers',
     resourceType: 'search',
     payloadParam: 'query.name',
   }),
@@ -36,7 +36,7 @@ router.get(
 router.get(
   '/search/cameras',
   accessLog({
-    action: '搜索相机',
+    action: 'searchCameras',
     resourceType: 'search',
     payloadParam: 'query.name',
   }),
@@ -49,7 +49,7 @@ router.get(
 router.get(
   '/search/lens',
   accessLog({
-    action: '搜索镜头',
+    action: 'searchLens',
     resourceType: 'search',
     payloadParam: 'query.name',
   }),

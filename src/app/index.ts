@@ -10,6 +10,7 @@ import avatarRouter from '../avatar/avatar.router';
 import diggRouter from '../digg/digg.router';
 import searchRouter from '../search/search.router';
 import auditLogRouter from '../audit-log/audit-log.router';
+import dashboardRouter from '../dashboard/dashboard.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -43,6 +44,7 @@ app.use(
   diggRouter,
   searchRouter,
   auditLogRouter,
+  dashboardRouter,
 );
 
 // 默认异常处理器
