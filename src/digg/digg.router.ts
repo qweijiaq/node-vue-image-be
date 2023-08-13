@@ -1,6 +1,7 @@
 import express from 'express';
 import * as diggController from './digg.controller';
 import { authGuard } from '../auth/auth.middleware';
+import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
@@ -8,13 +9,23 @@ const router = express.Router();
 router.post(
   '/posts/:post_id/digg',
   authGuard,
+  accessLog({
+    action: '点赞内容',
+    resourceType: 'post',
+    resourceParamName: 'post_id',
+  }),
   diggController.storeUserDiggPost,
 );
 
-// 取消点赞内容
+// 取消点赞
 router.delete(
   '/posts/:post_id/digg',
   authGuard,
+  accessLog({
+    action: '取消点赞',
+    resourceType: 'post',
+    resourceParamName: 'post_id',
+  }),
   diggController.destroyUserDiggPost,
 );
 
