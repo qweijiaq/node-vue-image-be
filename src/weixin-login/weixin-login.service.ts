@@ -4,7 +4,7 @@ import Jimp from 'jimp';
 import {
   WEIXIN_WEBSITE_APP_ID,
   WEIXIN_WEBSITE_APP_SECRET,
-} from 'src/app/app.config';
+} from '../app/app.config';
 import { weixinApiHttpClient, httpClient } from '../app/app.service';
 import { UserData } from '../user/user.service';
 import { createAvatar } from '../avatar/avatar.service';

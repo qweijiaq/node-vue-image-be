@@ -43,3 +43,19 @@ CREATE TABLE `user_meta` (
     FOREIGN Key (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+CREATE TABLE `product` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT(11) DEFAULT NULL,
+    `type` ENUM('license', 'subscription'),
+    `title` VARCHAR(255) DEFAULT NULL,
+    `description` JSON DEFAULT NULL,
+    `price` DECIMAL(6, 2) NOT NULL,
+    `salePrice` DECIMAL(6, 2) NOT NULL,
+    `meta` JSON DEFAULT NULL,
+    `status` ENUM('published', 'draft', 'archived') DEFAULT 'draft',
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN Key (`userId`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
