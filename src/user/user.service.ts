@@ -9,7 +9,7 @@ export const createUser = async (user: UserModel) => {
     `;
 
   const [data] = await connection.promise().query(statement, user);
-  return data;
+  return data as any;
 };
 
 interface GetUserOptions {
@@ -19,6 +19,10 @@ interface GetUserOptions {
 /**
  * 获取用户
  */
+export interface UserData extends UserModel {
+  avatar: number;
+}
+
 interface GetUserOptions {
   password?: boolean;
 }
@@ -49,7 +53,7 @@ export const getUser = (condition: string) => {
     const [data] = await connection.promise().query(statement, param);
 
     // 提供数据
-    return data[0].id ? data[0] : null;
+    return data[0].id ? (data[0] as UserData) : null;
   };
 };
 

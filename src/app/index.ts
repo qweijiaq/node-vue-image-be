@@ -11,6 +11,7 @@ import diggRouter from '../digg/digg.router';
 import searchRouter from '../search/search.router';
 import auditLogRouter from '../audit-log/audit-log.router';
 import dashboardRouter from '../dashboard/dashboard.router';
+import weixinLoginRouter from '../weixin-login/weixin-login.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -45,6 +46,7 @@ app.use(
   searchRouter,
   auditLogRouter,
   dashboardRouter,
+  weixinLoginRouter,
 );
 
 // 默认异常处理器

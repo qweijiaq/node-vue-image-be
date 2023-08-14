@@ -13,6 +13,7 @@
   "author": "WeiJia <2112025700@qq.com>",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.4.0",
     "bcrypt": "^4.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",

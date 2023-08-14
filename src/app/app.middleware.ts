@@ -83,6 +83,14 @@ export const defaultErrorHandler = (
       statusCode = 403;
       message = '您无法处理这个请求';
       break;
+    case 'CONNECT_ACCCOUNT_REQUIRED':
+      statusCode = 403;
+      message = '需要关联账户';
+      break;
+    case 'WEIXIN_ACCOUNT_ALREADY_CONNECTTED':
+      statusCode = 400;
+      message = '您的微信已经绑定了本地应用账户';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';
