@@ -32,3 +32,12 @@ CREATE TABLE IF NOT EXISTS `access_log` (
     FOREIGN KEY (`userId`) REFERENCES `user` (`id`) ON DELETE  CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS  `payment` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` ENUM('wxpay', 'alipay'),
+    `title` VARCHAR(255) DEFAULT NULL,
+    `description` VARCHAR(255) DEFAULT NULL,
+    `index` INT(2) DEFAULT NULL,
+    `meta` JSON DEFAULT NULL,
+    `status` ENUM('published', 'draft', 'archived') DEFAULT 'draft'
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

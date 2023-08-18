@@ -59,7 +59,7 @@ export const accessLog = (options: AccessLogOptions) => (
 
   // 日志数据
   const accessLog = {
-    userId: parseInt(userId),
+    userId: userId ? parseInt(userId) : null,
     userName,
     action,
     resourceType,

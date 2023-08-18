@@ -11,6 +11,8 @@ export const ValidateUserData = async (
 ) => {
   const { name, password } = req.body;
 
+  console.log(req.body);
+
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
   if (!password) return next(new Error('PASSWORD_IS_REQUIRED'));
 

@@ -126,7 +126,7 @@ interface FileAccessCControlOptions {
 export const fileAccessControl = async (options: FileAccessCControlOptions) => {
   const { file, currentUser } = options;
   const ownFile = file.user_id === parseInt(currentUser.id, 10);
-  const isAdmin = currentUser.id === '1';
+  const isAdmin = parseInt(currentUser.id) === 1;
   const parentPost = await getPostById(file.post_id, { currentUser });
 
   const [parentPostAuditLog] = await getAuditLogByResource({
