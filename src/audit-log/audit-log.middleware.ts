@@ -18,9 +18,9 @@ export const auditLogGuard = async (
   const { resourceId, resourceType, note, status } = req.body;
 
   // 验证资源类型
-  const isValidResourcetype = ['post', 'comment'].includes(resourceType);
+  const isValidResourceType = ['post', 'comment'].includes(resourceType);
 
-  if (!isValidResourcetype) {
+  if (!isValidResourceType) {
     return next(new Error('BAD_REQUEST'));
   }
 

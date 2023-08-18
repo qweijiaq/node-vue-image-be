@@ -1,4 +1,4 @@
-import { Resourcetype } from '../app/app.enum';
+import { ResourceType } from '../app/app.enum';
 
 export enum AuditLogStatus {
   pending = 'pending',
@@ -10,7 +10,7 @@ export class AuditLogModel {
   id?: number;
   userId?: number;
   userName?: string;
-  resourceType?: Resourcetype;
+  resourceType?: ResourceType;
   resourceId?: number;
   status?: AuditLogStatus;
   created?: number;

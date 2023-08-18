@@ -34,3 +34,6 @@ export const {
   WEIXIN_WEBSITE_APP_ID,
   WEIXIN_WEBSITE_APP_SECRET,
 } = process.env;
+
+// 许可
+export const LICENSES_PER_PAGE = parseInt(process.env['LICENSES_PER_PAGE'], 10);

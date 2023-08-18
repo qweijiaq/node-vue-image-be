@@ -15,6 +15,7 @@ import weixinLoginRouter from '../weixin-login/weixin-login.router';
 import productRouter from '../product/product.router';
 import paymentRouter from '../payment/payment.router';
 import orderRouter from '../order/order.router';
+import licenseRouter from '../license/license.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -53,6 +54,7 @@ app.use(
   productRouter,
   paymentRouter,
   orderRouter,
+  licenseRouter,
 );
 
 // 默认异常处理器

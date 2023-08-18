@@ -94,3 +94,16 @@ CREATE TABLE `order_log` (
     FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE `license` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT(11) DEFAULT NULL,
+    `orderId` INT(11) DEFAULT NULL,
+    `resourceType` ENUM('post') NOT NULL,
+    `resourceId` INT(11) DEFAULT NULL,
+    `status` ENUM('pending', 'valid', 'invalid') NOT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
