@@ -1,6 +1,6 @@
 import { connection } from '../app/database/mysql';
 import { allowedAccessCounts } from './dashboard.provider';
-import { AccessCountListItem } from '../../dist/dashboard/dashboard.provider';
+import { AccessCountListItem } from '../../src/dashboard/dashboard.provider';
 
 /**
  * 访问次数列表

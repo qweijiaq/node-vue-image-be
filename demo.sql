@@ -68,3 +68,29 @@ CREATE TABLE IF NOT EXISTS  `payment` (
     `meta` JSON DEFAULT NULL,
     `status` ENUM('published', 'draft', 'archived') DEFAULT 'draft'
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `order` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT(11) NOT NULL,
+    `productId` INT(11) NOT NULL,
+    `status` ENUM('pending', 'completed', 'archived') NOT NULL,
+    `payment` ENUM('wxpay', 'alipay') NOT NULL,
+    `totalAmount` DECIMAL(6,2) DEFAULT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`productId`) REFERENCES `product`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE `order_log` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT(11) DEFAULT NULL,
+    `orderId` INT(11) DEFAULT NULL,
+    `action` ENUM('orderCreated', 'orderUpdated', 'orderStatusChanged', 'orderPaymentrecived') NOT NULL,
+    `meta` JSON DEFAULT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

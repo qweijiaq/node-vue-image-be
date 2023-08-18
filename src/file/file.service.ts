@@ -3,7 +3,7 @@ import fs from 'fs';
 import jimp from 'jimp';
 import { connection } from '../app/database/mysql';
 import { FileModel } from './file.model';
-import { TokenPayload } from '../../dist/auth/auth.interface';
+import { TokenPayload } from '../../src/auth/auth.interface';
 import { getPostById, PostStatus } from '../post/post.service';
 import { getAuditLogByResource } from '../audit-log/audit-log.service';
 import { AuditLogStatus } from '../audit-log/audit-log.model';
