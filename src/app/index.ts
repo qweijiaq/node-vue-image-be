@@ -13,6 +13,7 @@ import auditLogRouter from '../audit-log/audit-log.router';
 import dashboardRouter from '../dashboard/dashboard.router';
 import weixinLoginRouter from '../weixin-login/weixin-login.router';
 import productRouter from '../product/product.router';
+import paymentRouter from '../payment/payment.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -49,6 +50,7 @@ app.use(
   dashboardRouter,
   weixinLoginRouter,
   productRouter,
+  paymentRouter,
 );
 
 // 默认异常处理器

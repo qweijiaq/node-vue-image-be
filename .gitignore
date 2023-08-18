@@ -21,3 +21,6 @@ npm-debug.log*
 .env*
 config/*.key
 /uploads
+
+# SQL
+demo.sql
