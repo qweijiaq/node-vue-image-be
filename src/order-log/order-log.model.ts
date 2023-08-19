@@ -1,4 +1,4 @@
-export enum OrderLoginAction {
+export enum OrderLogAction {
   orderCreated = 'orderCreated',
   orderUpdated = 'orderUpdated',
   orderStatusChanged = 'orderStatusChanged',
@@ -9,7 +9,7 @@ export class OrderLogModel {
   id?: number;
   userId?: number;
   orderId?: number;
-  action?: OrderLoginAction;
+  action?: OrderLogAction;
   meta?: any;
   created?: string;
 }

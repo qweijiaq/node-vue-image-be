@@ -107,3 +107,28 @@ CREATE TABLE `license` (
     FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `subscription` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userId` INT(11) DEFAULT NULL,
+    `type` ENUM('standard', 'pro') NOT NULL,
+    `status` ENUM('pending', 'valid', 'invalid', 'expired') NOT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `expired` TIMESTAMP DEFAULT NULL,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS `subscription_log` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `subscriptionId` INT(11) DEFAULT NULL,
+    `userId` INT(11) DEFAULT NULL,
+    `orderId` INT(11) DEFAULT NULL,
+    `action` ENUM('create', 'upgrade', 'renew', 'resubscribe', 'statusChanged', 'renewed', 'upgraded', 'resubscribed') NOT NULL,
+    `meta` JSON DEFAULT NULL,
+    `created` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY(`subscriptionId`) REFERENCES `subscription`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

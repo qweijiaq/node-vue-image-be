@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { createOrder, updateOrder } from './order.service';
 import { createOrderLog } from '../order-log/order-log.service';
-import { OrderLoginAction } from '../order-log/order-log.model';
+import { OrderLogAction } from '../order-log/order-log.model';
 import { ProductType } from '../product/product.model';
 import { createLicense } from '../license/license.service';
 import { LicenseState } from '../license/license.model';
+import { processSubscription } from '../subscription/subscription.service';
 
 /**
  * 创建订单
@@ -24,11 +25,12 @@ export const store = async (
     // 创建订单
     const data = await createOrder(order);
     const { insertId: orderId } = data;
+    order.id = orderId;
     // 创建订单日志
     await createOrderLog({
       userId: parseInt(userId),
       orderId,
-      action: OrderLoginAction.orderCreated,
+      action: OrderLogAction.orderCreated,
       meta: JSON.stringify({
         ...order,
         resourceType,
@@ -36,7 +38,6 @@ export const store = async (
       }),
     });
     // 创建许可
-    console.log(product.type, ProductType.license);
     if (product.type === ProductType.license) {
       await createLicense({
         userId: parseInt(userId),
@@ -45,6 +46,27 @@ export const store = async (
         resourceType,
         resourceId,
       });
+    }
+    // 创建订阅
+    if (product.type === ProductType.subscription) {
+      const result = await processSubscription({
+        userId: parseInt(userId),
+        order,
+        product,
+      });
+
+      if (result) {
+        await updateOrder(orderId, { totalAmount: result.order.totalAmount });
+        // 创建订单日志
+        await createOrderLog({
+          userId: parseInt(userId),
+          orderId,
+          action: OrderLogAction.orderUpdated,
+          meta: JSON.stringify({
+            totalAmount: result.order.totalAmount,
+          }),
+        });
+      }
     }
     // 做出响应
     res.status(201).send(data);
@@ -74,7 +96,7 @@ export const update = async (
     await createOrderLog({
       userId: parseInt(user.id),
       orderId: order.id,
-      action: OrderLoginAction.orderUpdated,
+      action: OrderLogAction.orderUpdated,
       meta: JSON.stringify({
         ...dataForUpdate,
       }),
