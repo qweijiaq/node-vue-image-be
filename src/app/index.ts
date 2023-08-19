@@ -18,6 +18,7 @@ import orderRouter from '../order/order.router';
 import licenseRouter from '../license/license.router';
 import subscriptionRouter from '../subscription/subscription.router';
 import downloadRouter from '../download/download.router';
+import paymentUrlRouter from '../payment-url/payment-url.router';
 import { defaultErrorHandler } from './app.middleware';
 import { currentUser } from '../auth/auth.middleware';
 import { ALLOW_ORIGIN } from './app.config';
@@ -59,6 +60,7 @@ app.use(
   licenseRouter,
   subscriptionRouter,
   downloadRouter,
+  paymentUrlRouter,
 );
 
 // 默认异常处理器

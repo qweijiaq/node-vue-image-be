@@ -43,3 +43,6 @@ export const STANDARD_SUBSCRIPTION_DOWNLOAD_LIMIT_PER_WEEK = parseInt(
   process.env['STANDARD_SUBSCRIPTION_DOWNLOAD_LIMIT_PER_WEEK'],
   10,
 );
+
+// 日期时间
+export const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';

@@ -13,6 +13,7 @@ import {
   getSubscriptionLogByOrderId,
 } from '../subscription-log/subscription-log.service';
 import { getProductByType } from '../product/product.service';
+import { DATE_TIME_FORMAT } from '../app/app.config';
 
 /**
  * 创建订单
@@ -238,14 +239,11 @@ export const PostProcessSubscription = async (
   // 订阅状态
   const status = SubscriptionStatus.valid;
 
-  // 日期时间格式
-  const dateTimeFormat = 'YYYY-MM-DD HH:mm:ss';
-
   // 新订阅
   if (subscription.status === SubscriptionStatus.pending) {
     subscription.expired = dayjs(Date.now())
       .add(1, 'year')
-      .format(dateTimeFormat);
+      .format(DATE_TIME_FORMAT);
     action = SubscriptionLogAction.statusChanged;
     preType = null;
   }
@@ -257,7 +255,7 @@ export const PostProcessSubscription = async (
   ) {
     subscription.expired = dayjs(subscription.expired)
       .add(1, 'year')
-      .format(dateTimeFormat);
+      .format(DATE_TIME_FORMAT);
     action = SubscriptionLogAction.renewed;
   }
 
@@ -268,7 +266,7 @@ export const PostProcessSubscription = async (
   ) {
     subscription.expired = dayjs(Date.now())
       .add(1, 'year')
-      .format(dateTimeFormat);
+      .format(DATE_TIME_FORMAT);
     action = SubscriptionLogAction.resubscribed;
   }
 

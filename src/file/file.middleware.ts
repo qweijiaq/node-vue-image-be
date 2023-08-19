@@ -3,6 +3,7 @@ import multer, { FileFilterCallback } from 'multer';
 import jimp from 'jimp';
 import dayjs from 'dayjs';
 import { imageResize, findFileById } from './file.service';
+import { DATE_TIME_FORMAT } from '../app/app.config';
 import {
   getDownloadByToken,
   updateDownload,
@@ -106,7 +107,7 @@ export const fileDownloadGuard = async (
 
     // 更新下载
     await updateDownload(download.id, {
-      used: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      used: dayjs().format(DATE_TIME_FORMAT),
     });
 
     // 设置请求体
