@@ -1,4 +1,5 @@
 import axios from 'axios';
+import ShortUniqueId from 'short-unique-id';
 import { WEIXIN_API_BASE_URL } from './app.config';
 
 /**
@@ -12,3 +13,8 @@ export const weixinApiHttpClient = axios.create({
  * HTTP 客户端
  */
 export const httpClient = axios.create();
+
+/**
+ * UID
+ */
+export const uid = new ShortUniqueId();

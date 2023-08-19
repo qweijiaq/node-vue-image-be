@@ -54,6 +54,7 @@ export const serve = async (
     await fileAccessControl({ file, currentUser });
     // 要提供的图像尺寸
     const { size } = req.query;
+    if (!size) throw new Error('BAD_REQUEST');
     // 文件名与目录
     let filename = file.filename;
     let root = 'uploads';
@@ -107,5 +108,33 @@ export const metadata = async (
     res.send(data);
   } catch (err) {
     next(err);
+  }
+};
+
+/**
+ * 文件下载
+ */
+export const download = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // 准备数据
+  const {
+    body: { file },
+  } = req;
+
+  try {
+    const filePath = path.join('uploads', file.filename);
+
+    // 设置头部
+    res.header({
+      'Content-Type': `${file.mimetype}`,
+    });
+
+    // 做出响应
+    res.download(filePath, file.originalname);
+  } catch (error) {
+    next(error);
   }
 };

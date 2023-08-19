@@ -1,7 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import jimp from 'jimp';
-import { imageResize } from './file.service';
+import dayjs from 'dayjs';
+import { imageResize, findFileById } from './file.service';
+import {
+  getDownloadByToken,
+  updateDownload,
+} from '../download/download.service';
 
 // 文件过滤器
 export const fileFilter = (fileTypes: Array<string>) => {
@@ -61,6 +66,54 @@ export const fileProcessor = async (
 
   // 调整图像尺寸
   imageResize(image, req.file);
+
+  next();
+};
+
+/**
+ * 文件下载守卫
+ */
+export const fileDownloadGuard = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  // 准备数据
+  const {
+    query: { token },
+    params: { fileId },
+  } = req;
+
+  try {
+    // 检查 token
+    if (!token) throw new Error('BAD_REQUEST');
+
+    // 检查下载是否可用
+    const download = await getDownloadByToken(token as string);
+    const isValidDownload = download && !download.used;
+    if (!isValidDownload) throw new Error('DOWNLOAD_INVALID');
+
+    // 检查下载是否过期
+    const isExpired = dayjs()
+      .subtract(2, 'hours')
+      .isAfter(download.created);
+    if (isExpired) throw new Error('DOWNLOAD_EXPIRED');
+
+    // 检查资源是否匹配
+    const file = await findFileById(parseInt(fileId, 10));
+    const isValidFile = file && file.post_id === download.resourceId;
+    if (!isValidFile) throw new Error('BAD_REQUEST');
+
+    // 更新下载
+    await updateDownload(download.id, {
+      used: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    });
+
+    // 设置请求体
+    req.body = { download, file };
+  } catch (error) {
+    return next(error);
+  }
 
   next();
 };

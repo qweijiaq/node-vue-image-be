@@ -37,3 +37,9 @@ export const {
 
 // 许可
 export const LICENSES_PER_PAGE = parseInt(process.env['LICENSES_PER_PAGE'], 10);
+
+// 订阅
+export const STANDARD_SUBSCRIPTION_DOWNLOAD_LIMIT_PER_WEEK = parseInt(
+  process.env['STANDARD_SUBSCRIPTION_DOWNLOAD_LIMIT_PER_WEEK'],
+  10,
+);

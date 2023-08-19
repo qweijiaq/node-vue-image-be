@@ -1,7 +1,11 @@
 import express from 'express';
-import * as fileControllers from './file.controller';
+import * as fileController from './file.controller';
 import { authGuard } from '../auth/auth.middleware';
-import { fileInterceptor, fileProcessor } from './file.middleware';
+import {
+  fileInterceptor,
+  fileProcessor,
+  fileDownloadGuard,
+} from './file.middleware';
 import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
@@ -16,11 +20,11 @@ router.post(
     action: '上传文件',
     resourceType: 'file',
   }),
-  fileControllers.store,
+  fileController.store,
 );
 
 // 文件服务
-router.get('/files/:fileId/serve', fileControllers.serve);
+router.get('/files/:fileId/serve', fileController.serve);
 
 // 文件信息
 router.get(
@@ -30,7 +34,16 @@ router.get(
     resourceType: 'file',
     resourceParamName: 'fileId',
   }),
-  fileControllers.metadata,
+  fileController.metadata,
+);
+
+/**
+ * 文件下载
+ */
+router.get(
+  '/files/:fileId/download',
+  fileDownloadGuard,
+  fileController.download,
 );
 
 export default router;

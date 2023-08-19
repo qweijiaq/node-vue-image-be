@@ -23,6 +23,7 @@
     "lodash": "^4.17.15",
     "multer": "^1.4.2",
     "mysql2": "^2.1.0",
+    "short-unique-id": "^4.4.4",
     "socket.io": "^4.7.1"
   },
   "devDependencies": {
