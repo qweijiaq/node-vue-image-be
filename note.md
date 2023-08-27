@@ -16,3 +16,19 @@
   - genrsa -out private.key 4096
   - rsa -in private.key -pubout -out public.key
   - exit
+
+后端技术栈：`Express` `TypeScript`
+
+应用架构：
+
+1. app 应用
+2. auth 身份验证
+3. user 用户
+4. post 内容
+5. comment 评论
+6. digg 点赞
+
+router 路由
+controller 控制器
+middleware 中间件
+service 服务
