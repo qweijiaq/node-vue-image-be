@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 
-// 默认异常处理器
+/**
+ * 默认异常处理器 -- 异常处理器的本质也是中间件，只不过多了错误内容
+ */
 export const defaultErrorHandler = (
   error: any,
   req: Request,
@@ -69,7 +71,7 @@ export const defaultErrorHandler = (
       break;
     case 'PASSWORD_IS_THE_SAME':
       statusCode = 400;
-      message = '要修改的密码不能与原密码一样';
+      message = '要修改的密码不能与原密码相同';
       break;
     default:
       statusCode = 500;

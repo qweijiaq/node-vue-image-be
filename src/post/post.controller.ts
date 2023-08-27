@@ -14,7 +14,9 @@ import { getTagByName, createTag } from '../tag/tag.service';
 import { createPostTag, deletePostTag } from './post.service';
 import { getPostFiles, deletePostFiles } from '../file/file.service';
 
-// 获取内容列表
+/**
+ * 获取内容列表
+ */
 export const index = async (
   req: Request,
   res: Response,
@@ -41,7 +43,9 @@ export const index = async (
   }
 };
 
-// 创建内容
+/**
+ * 创建内容
+ */
 export const store = async (
   req: Request,
   res: Response,
@@ -58,7 +62,9 @@ export const store = async (
   }
 };
 
-// 更新内容
+/**
+ * 更新内容
+ */
 export const update = async (
   req: Request,
   res: Response,
@@ -75,7 +81,9 @@ export const update = async (
   }
 };
 
-// 删除内容
+/**
+ * 删除内容
+ */
 export const destroy = async (
   req: Request,
   res: Response,
@@ -94,7 +102,9 @@ export const destroy = async (
   }
 };
 
-// 添加内容标签
+/**
+ * 添加内容标签
+ */
 export const storePostTag = async (
   req: Request,
   res: Response,
@@ -140,7 +150,9 @@ export const storePostTag = async (
   }
 };
 
-// 移除内容标签
+/**
+ * 移除内容标签
+ */
 export const destroyPostTag = async (
   req: Request,
   res: Response,
@@ -157,7 +169,9 @@ export const destroyPostTag = async (
   }
 };
 
-// 单个内容
+/**
+ * 单个内容详情
+ */
 export const show = async (req: Request, res: Response, next: NextFunction) => {
   // 准备数据
   const { post_id } = req.params;
