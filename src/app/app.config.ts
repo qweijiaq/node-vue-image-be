@@ -46,3 +46,13 @@ export const STANDARD_SUBSCRIPTION_DOWNLOAD_LIMIT_PER_WEEK = parseInt(
 
 // 日期时间
 export const DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
+// 微信支付
+export const {
+  WXPAY_APP_ID,
+  WXPAY_MCH_ID,
+  WXPAY_KEY,
+  WXPAY_API_UNIFIEDORDER,
+  WXPAY_API_ORDERQUERY,
+  WXPAY_NOTIFY_URL,
+} = process.env;

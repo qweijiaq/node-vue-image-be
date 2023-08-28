@@ -29,6 +29,9 @@ const app = express();
 // 添加 JSON 中间件
 app.use(express.json());
 
+// 处理 XML
+app.use(express.text({ type: 'text/xml' }));
+
 // 当前用户
 app.use(currentUser);
 

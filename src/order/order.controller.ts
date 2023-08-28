@@ -6,6 +6,8 @@ import { ProductType } from '../product/product.model';
 import { createLicense } from '../license/license.service';
 import { LicenseStatus } from '../license/license.model';
 import { processSubscription } from '../subscription/subscription.service';
+import { PaymentName } from '../payment/payment.model';
+import { wxpay } from '../payment/wxpay/wxpay.service';
 
 /**
  * 创建订单
@@ -111,13 +113,35 @@ export const update = async (
 /**
  * 订单支付
  */
+export interface PrepayResult {
+  codeUrl?: string;
+  paymentUrl?: string;
+  payment?: PaymentName;
+}
+
 export const pay = async (req: Request, res: Response, next: NextFunction) => {
   // 准备数据
   const {
     body: { order },
+    user: { id: userId },
   } = req;
 
   try {
+    const data: PrepayResult = {};
+
+    if (order.payment === PaymentName.wxpay) {
+      const wxpayResult = await wxpay(order, req);
+
+      data.codeUrl = wxpayResult.codeUrl;
+      data.payment = PaymentName.wxpay;
+
+      await createOrderLog({
+        userId: parseInt(userId, 10),
+        orderId: order.id,
+        action: OrderLogAction.orderUpdated,
+        meta: JSON.stringify(wxpayResult),
+      });
+    }
     res.send(order);
   } catch (error) {
     next(error);
