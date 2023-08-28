@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // 应用配置
-export const { APP_PORT } = process.env;
+export const { APP_PORT, APP_NAME, APP_NAME_ALIAS } = process.env;
 
 // 数据仓库配置
 export const {

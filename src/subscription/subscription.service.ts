@@ -212,7 +212,7 @@ export interface PostProcessSubscriptionOptions {
   product: ProductModel;
 }
 
-export const PostProcessSubscription = async (
+export const postProcessSubscription = async (
   options: PostProcessSubscriptionOptions,
 ) => {
   const {

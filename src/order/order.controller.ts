@@ -4,7 +4,7 @@ import { createOrderLog } from '../order-log/order-log.service';
 import { OrderLogAction } from '../order-log/order-log.model';
 import { ProductType } from '../product/product.model';
 import { createLicense } from '../license/license.service';
-import { LicenseState } from '../license/license.model';
+import { LicenseStatus } from '../license/license.model';
 import { processSubscription } from '../subscription/subscription.service';
 
 /**
@@ -42,7 +42,7 @@ export const store = async (
       await createLicense({
         userId: parseInt(userId),
         orderId,
-        status: LicenseState.pending,
+        status: LicenseStatus.pending,
         resourceType,
         resourceId,
       });
@@ -103,6 +103,22 @@ export const update = async (
     });
     // 做出响应
     res.send(data);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 订单支付
+ */
+export const pay = async (req: Request, res: Response, next: NextFunction) => {
+  // 准备数据
+  const {
+    body: { order },
+  } = req;
+
+  try {
+    res.send(order);
   } catch (error) {
     next(error);
   }
