@@ -8,6 +8,7 @@ import { LicenseStatus } from '../license/license.model';
 import { processSubscription } from '../subscription/subscription.service';
 import { PaymentName } from '../payment/payment.model';
 import { wxpay } from '../payment/wxpay/wxpay.service';
+import { alipay } from '../payment/alipay/alipay.service';
 
 /**
  * 创建订单
@@ -115,7 +116,7 @@ export const update = async (
  */
 export interface PrepayResult {
   codeUrl?: string;
-  paymentUrl?: string;
+  offsetUrl?: string;
   payment?: PaymentName;
 }
 
@@ -142,6 +143,21 @@ export const pay = async (req: Request, res: Response, next: NextFunction) => {
         meta: JSON.stringify(wxpayResult),
       });
     }
+
+    if (order.payment === PaymentName.alipay) {
+      const alipayResult = await alipay(order, req);
+      data.codeUrl = alipayResult.paymentUrl;
+      data.payment = PaymentName.alipay;
+      data.offsetUrl = alipayResult.pagePayRequestUrl;
+
+      await createOrderLog({
+        userId: parseInt(userId, 10),
+        orderId: order.id,
+        action: OrderLogAction.orderUpdated,
+        meta: JSON.stringify(alipayResult),
+      });
+    }
+
     res.send(order);
   } catch (error) {
     next(error);

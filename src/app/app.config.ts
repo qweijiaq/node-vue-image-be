@@ -56,3 +56,24 @@ export const {
   WXPAY_API_ORDERQUERY,
   WXPAY_NOTIFY_URL,
 } = process.env;
+
+// 支付宝支付
+export const {
+  ALIPAY_APP_ID,
+  ALIPAY_NOTIFY_URL,
+  ALIPAY_RETURN_URL,
+  ALIPAY_GATEWAY,
+  ALIPAY_WAP_PAY_BASE_URL,
+} = process.env;
+
+export let { ALIPAY_PUBLIC_KEY, ALIPAY_APP_PRIVATE_KEY } = process.env;
+
+ALIPAY_PUBLIC_KEY =
+  '-----BEGIN PUBLIC KEY-----\n' +
+  ALIPAY_PUBLIC_KEY +
+  '\n-----END PUBLIC KEY-----';
+
+ALIPAY_APP_PRIVATE_KEY =
+  '-----BEGIN RSA PRIVATE KEY-----\n' +
+  ALIPAY_APP_PRIVATE_KEY +
+  '\n-----END RSA PRIVATE KEY-----';

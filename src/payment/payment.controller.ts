@@ -3,6 +3,7 @@ import { getPayments, paymentRecived } from './payment.service';
 import { xmlParser, xmlBuilder } from '../app/app.service';
 import { WxpayPaymentResult } from './wxpay/wxpay.interface';
 import { wxpayVerifyPaymentResult } from './wxpay/wxpay.service';
+import { alipayVerifyPaymentResult } from './alipay/alipay.service';
 
 /**
  * 支付方法
@@ -30,11 +31,17 @@ export const wxpayNotify = async (
 ) => {
   try {
     // 1. 处理通知数据
+    const paymentResult = req.body;
     // 2. 验证通知数据
+    const isValid = alipayVerifyPaymentResult(paymentResult);
+    const orderId = paymentResult.outTradeNo.split('_')[1];
     // 3. 处理完成付款
+    if (isValid) {
+      paymentRecived(parseInt(orderId, 10), paymentResult);
+    }
     // 4. 做出响应
-
-    res.send('收到');
+    const responseData = isValid ? 'SUCCESS' : 'FAIL';
+    res.send(responseData);
   } catch (error) {
     next(error);
   }
