@@ -34,13 +34,13 @@ export const licenseSqlFragment = {
       LEFT JOIN user
         ON license.userId = user.id
       LEFT JOIN avatar
-        ON user.id = avatar.user_id
+        ON user.id = avatar.userId
     `,
 
   leftJoinResourceUser: `
       LEFT JOIN user AS author
-        ON author.id = post.user_id
+        ON author.id = post.userId
       LEFT JOIN avatar AS authorAvatar
-        ON author.id = authorAvatar.user_id
+        ON author.id = authorAvatar.userId
     `,
 };

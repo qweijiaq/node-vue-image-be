@@ -1,11 +1,12 @@
 import { connection } from '../app/database/mysql';
 import { PostModel } from './post.model';
 import { sqlFragment } from './post.provider';
-import { currentUser } from '../auth/auth.middleware';
 import { TokenPayload } from '../../src/auth/auth.interface';
 import { AuditLogStatus } from '../audit-log/audit-log.model';
 
-// 获取内容列表
+/**
+ * 获取内容列表
+ */
 export interface GetPostsOptionsFilter {
   name: string;
   sql?: string;
@@ -81,11 +82,11 @@ export const getPosts = async (options: GetPostsOptions) => {
       ${sqlFragment.totalDiggs},
       ${sqlFragment.audit},
       (
-        SELECT COUNT(user_digg_post.post_id)
+        SELECT COUNT(user_digg_post.postId)
         FROM user_digg_post
         WHERE
-          user_digg_post.post_id = post.id
-          && user_digg_post.user_id = ${userId}
+          user_digg_post.postId = post.id
+          && user_digg_post.userId = ${userId}
       ) as digged
       FROM post
       ${sqlFragment.leftJoinUser}
@@ -103,7 +104,9 @@ export const getPosts = async (options: GetPostsOptions) => {
   return data;
 };
 
-// 创建内容
+/**
+ * 创建内容
+ */
 export const createPost = async (post: PostModel) => {
   const statement = `
       INSERT INTO post
@@ -115,7 +118,9 @@ export const createPost = async (post: PostModel) => {
   return data;
 };
 
-// 更新内容
+/**
+ * 更新内容
+ */
 export const updatePost = async (postId: number, post: PostModel) => {
   const statement = `
       UPDATE post
@@ -128,7 +133,9 @@ export const updatePost = async (postId: number, post: PostModel) => {
   return data;
 };
 
-// 删除内容
+/**
+ * 删除内容
+ */
 export const deletePost = async (postId: number) => {
   const statement = `
       DELETE FROM post
@@ -140,43 +147,51 @@ export const deletePost = async (postId: number) => {
   return data;
 };
 
-// 保存内容标签
-export const createPostTag = async (post_id: number, tag_id: number) => {
+/**
+ * 保存内容标签
+ */
+export const createPostTag = async (postId: number, tagId: number) => {
   const statement = `
-    INSERT INTO post_tag(post_id, tag_id)
+    INSERT INTO post_tag(postId, tagId)
     VALUES(?, ?)
   `;
 
-  const [data] = await connection.promise().query(statement, [post_id, tag_id]);
+  const [data] = await connection.promise().query(statement, [postId, tagId]);
 
   return data;
 };
 
-// 检查内容标签
-export const postHasTag = async (post_id: number, tag_id: number) => {
+/**
+ * 检查内容标签
+ */
+export const postHasTag = async (postId: number, tagId: number) => {
   const statement = `
     SELECT * FROM post_tag
-    WHERE post_id = ? AND tag_id = ?
+    WHERE postId = ? AND tagId = ?
   `;
 
-  const [data] = await connection.promise().query(statement, [post_id, tag_id]);
+  const [data] = await connection.promise().query(statement, [postId, tagId]);
 
   return data[0] ? true : false;
 };
 
-// 移除内容标签
-export const deletePostTag = async (post_id: number, tag_id: number) => {
+/**
+ * 移除内容标签
+ */
+export const deletePostTag = async (postId: number, tagId: number) => {
   const statement = `
     DELETE FROM post_tag
-    WHERE post_id = ? AND tag_id = ?
+    WHERE postId = ? AND tagId = ?
   `;
 
-  const [data] = await connection.promise().query(statement, [post_id, tag_id]);
+  const [data] = await connection.promise().query(statement, [postId, tagId]);
 
   return data;
 };
 
-// 统计内容数量
+/**
+ * 统计内容数量
+ */
 export const getPostsTotalCount = async (options: GetPostsOptions) => {
   const { filter, status, auditStatus } = options;
 
@@ -225,11 +240,11 @@ export interface GetPostByIdOptions {
 }
 
 export const getPostById = async (
-  post_id: number,
+  postId: number,
   options: GetPostByIdOptions = {},
 ) => {
   const {
-    currentUser: { id: user_id },
+    currentUser: { id: userId },
   } = options;
 
   // 准备查询
@@ -246,11 +261,11 @@ export const getPostById = async (
       ${sqlFragment.totalDiggs},
       ${sqlFragment.audit},
       (
-        SELECT COUNT(user_digg_post.post_id)
+        SELECT COUNT(user_digg_post.postId)
         FROM user_digg_post
         WHERE
-          user_digg_post.post_id = post.id
-          && user_digg_post.user_id = ${user_id}
+          user_digg_post.postId = post.id
+          && user_digg_post.userId = ${userId}
       ) AS digged
     FROM post
     ${sqlFragment.leftJoinUser}
@@ -261,7 +276,7 @@ export const getPostById = async (
   `;
 
   // 执行查询
-  const [data] = await connection.promise().query(statement, post_id);
+  const [data] = await connection.promise().query(statement, postId);
 
   // 没找到内容
   if (!data[0].id) {

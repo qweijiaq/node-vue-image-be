@@ -14,10 +14,4 @@ export const socketServer = new Server(httpServer, {
   },
 });
 
-// socketServer.on('connect', socket => {
-//   socket.on('greet', data => {
-//     console.log(data);
-//   });
-// });
-
 export default httpServer;

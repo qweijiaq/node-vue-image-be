@@ -5,7 +5,9 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 创建标签
+/**
+ * 创建标签
+ */
 router.post(
   '/tags',
   authGuard,

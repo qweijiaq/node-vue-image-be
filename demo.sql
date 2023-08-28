@@ -157,3 +157,84 @@ CREATE TABLE `payment_url` (
 
     FOREIGN KEY(`orderId`) REFERENCES `order`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS `user` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL UNIQUE KEY,
+    `password` VARCHAR(255) NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 内容表
+CREATE TABLE IF NOT EXISTS `post` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `title` VARCHAR(255) NOT NULL,
+    `content` LONGTEXT,
+    `userId` INT(11) DEFAULT NULL,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 文件（图片）表
+CREATE TABLE IF NOT EXISTS `file` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `originalname` VARCHAR(255) NOT NULL,
+    `mimetype` VARCHAR(255) NOT NULL,
+    `filename` VARCHAR(255) NOT NULL,
+    `size` INT(11) NOT NULL,
+    `postId` INT(11) NOT NULL,
+    `userId` INT(11) NOT NULL,
+
+    FOREIGN KEY(`postId`) REFERENCES `post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 标签表
+CREATE TABLE IF NOT EXISTS `tag` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `name` VARCHAR(255) NOT NULL UNIQUE KEY
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 内容-标签关联表
+CREATE TABLE IF NOT EXISTS `post_tag` (
+    `postId` INT(11) NOT NULL,
+    `tagId` INT(11) NOT NULL,
+    PRIMARY KEY (`postId`, `tagId`),
+
+    FOREIGN KEY(`postId`) REFERENCES `post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`tagId`) REFERENCES `tag`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 评论表
+CREATE TABLE IF NOT EXISTS  `comment` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `content` LONGTEXT,
+    `postId` INT(11) NOT NULL,
+    `userId` INT(11) NOT NULL,
+    `parentId` INT(11) DEFAULT NULL,
+
+    FOREIGN KEY(`postId`) REFERENCES `post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`parentId`) REFERENCES `comment`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 头像表
+CREATE TABLE IF NOT EXISTS `avatar` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `mimetype` VARCHAR(255) NOT NULL,
+    `filename` VARCHAR(255) NOT NULL,
+    `size` INT(11) NOT NULL,
+    `userId` INT(11) NOT NULL,
+
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 点赞表
+CREATE TABLE IF NOT EXISTS `user_digg_post` (
+    `postId` INT(11) NOT NULL,
+    `userId` INT(11) NOT NULL,
+    PRIMARY KEY (`postId`, `userId`),
+
+    FOREIGN KEY(`postId`) REFERENCES `post`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -3,5 +3,5 @@ export class AvatarModel {
   mimetype?: string;
   filename?: string;
   size?: number;
-  user_id?: number;
+  userId?: number;
 }

@@ -3,15 +3,15 @@ import * as userService from './user.service';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
 
-// 验证用户
+/**
+ * 验证用户
+ */
 export const ValidateUserData = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   const { name, password } = req.body;
-
-  console.log(req.body);
 
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
   if (!password) return next(new Error('PASSWORD_IS_REQUIRED'));
@@ -22,14 +22,16 @@ export const ValidateUserData = async (
   next();
 };
 
-// Hash 密码
+/**
+ * Hash 密码
+ */
 export const hashPassword = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   const { password } = req.body;
-  req.body.password = await bcrypt.hash(password, 10);
+  req.body.password = await bcrypt.hash(password, 10); // 10 表示 hash 的强度
   next();
 };
 

@@ -69,14 +69,12 @@ export const store = async (
 ) => {
   const { title, content, status = PostStatus.draft } = req.body;
   const { id } = req.user;
-  const user_id = parseInt(id);
-
-  console.log(status);
+  const userId = parseInt(id, 10);
 
   const post: PostModel = {
     title,
     content,
-    user_id,
+    userId,
     status,
   };
   try {
@@ -117,6 +115,7 @@ export const destroy = async (
   const { postId } = req.params;
   try {
     const files = await getPostFiles(parseInt(postId, 10));
+    // 删除内容相关的图片文件
     if (files.length) {
       await deletePostFiles(files);
     }
@@ -184,10 +183,10 @@ export const destroyPostTag = async (
   next: NextFunction,
 ) => {
   const { postId } = req.params;
-  const { tag_id } = req.body;
+  const { tagId } = req.body;
 
   try {
-    await deletePostTag(parseInt(postId, 10), tag_id);
+    await deletePostTag(parseInt(postId, 10), tagId);
     res.send('移除内容标签成功');
   } catch (err) {
     next(err);
@@ -199,18 +198,18 @@ export const destroyPostTag = async (
  */
 export const show = async (req: Request, res: Response, next: NextFunction) => {
   // 准备数据
-  const { post_id } = req.params;
+  const { postId } = req.params;
   const { user: currentUser } = req;
 
   // 调取内容
   try {
-    const post = await getPostById(parseInt(post_id, 10), {
+    const post = await getPostById(parseInt(postId, 10), {
       currentUser,
     });
 
     // 审核日志
     const [auditLog] = await getAuditLogByResource({
-      resourceId: parseInt(post_id, 10),
+      resourceId: parseInt(postId, 10),
       resourceType: 'post',
     });
 

@@ -4,16 +4,21 @@ import { Request, Response, NextFunction, response } from 'express';
 import _ from 'lodash';
 import { createFile, findFileById, fileAccessControl } from './file.service';
 
-// 上传文件
+/**
+ * 上传文件
+ */
 export const store = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
+  // 当前用户
   const { id: uid } = req.user;
+  const userId = parseInt(uid, 10);
+  // 所属内容
   const { post: pid } = req.query;
-  const user_id = parseInt(uid, 10);
-  const post_id = parseInt(pid as string, 10);
+  const postId = parseInt(pid as string, 10);
+  // 文件信息
   const fileInfo = _.pick(req.file, [
     'originalname',
     'mimetype',
@@ -24,8 +29,8 @@ export const store = async (
   try {
     const data = await createFile({
       ...fileInfo,
-      user_id,
-      post_id,
+      userId,
+      postId,
       ...req.fileMetadata,
     });
 
@@ -35,7 +40,9 @@ export const store = async (
   }
 };
 
-// 文件服务
+/**
+ * 文件服务
+ */
 export const serve = async (
   req: Request,
   res: Response,
@@ -89,7 +96,9 @@ export const serve = async (
   }
 };
 
-// 文件信息
+/**
+ * 文件信息
+ */
 export const metadata = async (
   req: Request,
   res: Response,

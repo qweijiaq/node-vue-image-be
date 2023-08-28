@@ -5,29 +5,32 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 点赞内容
+/**
+ * 点赞内容
+ */
 router.post(
-  '/posts/:post_id/digg',
+  '/posts/:postId/digg',
   authGuard,
   accessLog({
     action: 'createUserDiggPost',
     resourceType: 'post',
-    resourceParamName: 'post_id',
+    resourceParamName: 'postId',
   }),
   diggController.storeUserDiggPost,
 );
 
-// 取消点赞
+/**
+ * 取消点赞
+ */
 router.delete(
-  '/posts/:post_id/digg',
+  '/posts/:postId/digg',
   authGuard,
   accessLog({
     action: '取消点赞',
     resourceType: 'post',
-    resourceParamName: 'post_id',
+    resourceParamName: 'postId',
   }),
   diggController.destroyUserDiggPost,
 );
 
-// 导出路由
 export default router;

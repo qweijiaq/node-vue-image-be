@@ -9,7 +9,9 @@ import {
   updateDownload,
 } from '../download/download.service';
 
-// 文件过滤器
+/**
+ * 文件过滤器
+ */
 export const fileFilter = (fileTypes: Array<string>) => {
   return (
     req: Request,
@@ -30,16 +32,22 @@ export const fileFilter = (fileTypes: Array<string>) => {
 
 const fileUploadFilter = fileFilter(['image/png', 'image/jpg', 'image/jpeg']);
 
-// 创建一个 multer
+/**
+ * 创建一个 Multer
+ */
 const fileUpload = multer({
   dest: 'uploads/',
   fileFilter: fileUploadFilter,
 });
 
-// 文件拦截器
+/**
+ * 文件拦截器
+ */
 export const fileInterceptor = fileUpload.single('file');
 
-// 文件处理器
+/**
+ * 文件处理器
+ */
 export const fileProcessor = async (
   req: Request,
   res: Response,
@@ -102,7 +110,7 @@ export const fileDownloadGuard = async (
 
     // 检查资源是否匹配
     const file = await findFileById(parseInt(fileId, 10));
-    const isValidFile = file && file.post_id === download.resourceId;
+    const isValidFile = file && file.postId === download.resourceId;
     if (!isValidFile) throw new Error('BAD_REQUEST');
 
     // 更新下载

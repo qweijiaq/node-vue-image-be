@@ -6,7 +6,9 @@ import {
   GetPostsOptionsPagination,
 } from '../../src/post/post.service';
 
-// 创建评论
+/**
+ * 创建评论
+ */
 export const createComment = async (comment: CommentModel) => {
   const statement = `
       INSERT INTO comment
@@ -17,11 +19,13 @@ export const createComment = async (comment: CommentModel) => {
   return data as any;
 };
 
-// 检测评论是否是回复评论
+/**
+ * 检测评论是否是回复评论
+ */
 export const isReplyComment = async (commentId: number) => {
   // 准备查询语句
   const statement = `
-      SELECT parent_id FROM comment
+      SELECT parentId FROM comment
       WHERE id = ?
     `;
 
@@ -29,10 +33,12 @@ export const isReplyComment = async (commentId: number) => {
   const [data] = await connection.promise().query(statement, commentId);
 
   // 返回结果
-  return data[0].parent_id ? true : false;
+  return data[0].parentId ? true : false;
 };
 
-// 修改评论
+/**
+ * 修改评论
+ */
 export const updateComment = async (comment: CommentModel) => {
   // 准备数据
   const { id, content } = comment;
@@ -51,7 +57,9 @@ export const updateComment = async (comment: CommentModel) => {
   return data;
 };
 
-// 删除评论
+/**
+ * 删除评论
+ */
 export const deleteComment = async (commentId: number) => {
   // 准备查询
   const statement = `
@@ -176,7 +184,7 @@ export const getCommentReplies = async (options: GetCommentRepliesOptions) => {
       comment
     ${sqlFragment.leftJoinUser}
     WHERE
-      comment.parent_id = ?
+      comment.parentId = ?
     GROUP BY
       comment.id
   `;

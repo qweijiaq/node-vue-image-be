@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from 'express';
 import { AuditLogStatus } from '../audit-log/audit-log.model';
 import { PostStatus } from './post.service';
 
-// 排序方式
+/**
+ * 排序方式
+ */
 export const sort = async (req: Request, res: Response, next: NextFunction) => {
   // 获取客户端的排序方式
   const { sort } = req.query;
@@ -33,7 +35,9 @@ export const sort = async (req: Request, res: Response, next: NextFunction) => {
   next();
 };
 
-// 过滤列表
+/**
+ * 过滤列表
+ */
 export const filter = async (
   req: Request,
   res: Response,
@@ -50,7 +54,7 @@ export const filter = async (
     lensModel,
   } = req.query;
 
-  // 设置默认的过滤
+  // 设置默认的过滤 -- 主要是用于 WHERE 条件的占位
   req.filter = {
     name: 'default',
     sql: 'post.id IS NOT NULL',
@@ -78,7 +82,7 @@ export const filter = async (
   if (user && action == 'digged' && !tag) {
     req.filter = {
       name: 'userDigged',
-      sql: 'user_digg_post.user_id = ?',
+      sql: 'user_digg_post.userId = ?',
       param: `${user}`,
     };
   }
@@ -105,7 +109,9 @@ export const filter = async (
   next();
 };
 
-// 内容分页
+/**
+ * 内容分页
+ */
 export const paginate = (itemsPerPage: number) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     // 当前页码

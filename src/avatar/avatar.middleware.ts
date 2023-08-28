@@ -4,26 +4,34 @@ import Jimp from 'jimp';
 import { fileFilter } from '../file/file.middleware';
 import path from 'path';
 
-// 文件过滤器
+/**
+ * 文件过滤器
+ */
 const avatarUploadFilter = fileFilter(['image/png', 'image/jpg', 'image/jpeg']);
 
-// 创建一个 Multer
+/**
+ * 创建一个 Multer
+ */
 const avatarUpload = multer({
   dest: 'uploads/avatar',
   fileFilter: avatarUploadFilter,
 });
 
-// 文件拦截器
+/**
+ * 文件拦截器
+ */
 export const avatarInterceptor = avatarUpload.single('avatar');
 
-// 头像处理器
+/**
+ * 头像处理器
+ */
 export const avatarProcessor = async (
-  request: Request,
-  response: Response,
+  req: Request,
+  res: Response,
   next: NextFunction,
 ) => {
   // 准备文件信息
-  const { file } = request;
+  const { file } = req;
 
   // 准备文件路径
   const filePath = path.join(file.destination, 'resized', file.filename);

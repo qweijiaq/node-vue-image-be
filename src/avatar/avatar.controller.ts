@@ -13,8 +13,8 @@ export const store = async (
   next: NextFunction,
 ) => {
   // 当前用户 ID
-  const { id: userId } = request.user;
-  const user_id = parseInt(userId, 10);
+  const { id: uid } = request.user;
+  const userId = parseInt(uid, 10);
 
   // 头像文件信息
   const fileInfo = _.pick(request.file, ['mimetype', 'filename', 'size']);
@@ -22,7 +22,7 @@ export const store = async (
   // 准备头像数据
   const avatar = {
     ...fileInfo,
-    user_id,
+    userId,
   };
 
   try {
@@ -45,11 +45,11 @@ export const serve = async (
   next: NextFunction,
 ) => {
   // 用户 ID
-  const { user_id } = req.params;
+  const { userId } = req.params;
 
   try {
     // 查找头像信息
-    const avatar = await findAvatarByUserId(parseInt(user_id, 10));
+    const avatar = await findAvatarByUserId(parseInt(userId, 10));
 
     if (!avatar) {
       throw new Error('FILE_NOT_FOUND');

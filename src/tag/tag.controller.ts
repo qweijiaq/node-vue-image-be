@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { getTagByName, createTag } from './tag.service';
 
-// 创建标签
+/**
+ * 创建标签
+ */
 export const store = async (
   req: Request,
   res: Response,

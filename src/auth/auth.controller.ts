@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction, response } from 'express';
 import { signToken } from './auth.service';
 
-// 用户登录
+/**
+ * 用户登录
+ */
 export const login = async (
   req: Request,
   res: Response,
@@ -23,7 +25,9 @@ export const login = async (
   }
 };
 
-// 验证登录
+/**
+ * 验证登录
+ */
 export const validate = (req: Request, res: Response, next: NextFunction) => {
   res.sendStatus(200);
 };

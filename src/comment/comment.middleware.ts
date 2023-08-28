@@ -14,14 +14,14 @@ export const filter = async (
   // 默认的过滤
   req.filter = {
     name: 'default',
-    sql: 'comment.parent_id IS NULL',
+    sql: 'comment.parentId IS NULL',
   };
 
   // 内容的评论
   if (post && !user && !action) {
     req.filter = {
       name: 'postComments',
-      sql: 'comment.parent_id IS NULL AND comment.post_id = ?',
+      sql: 'comment.parentId IS NULL AND comment.postId = ?',
       param: `${post}`,
     };
   }
@@ -30,7 +30,7 @@ export const filter = async (
   if (user && action == 'published' && !post) {
     req.filter = {
       name: 'userPublished',
-      sql: 'comment.parent_id IS NULL AND comment.user_id = ?',
+      sql: 'comment.parentId IS NULL AND comment.userId = ?',
       param: `${user}`,
     };
   }
@@ -39,7 +39,7 @@ export const filter = async (
   if (user && action == 'replied' && !post) {
     req.filter = {
       name: 'userReplied',
-      sql: 'comment.parent_id IS NOT NULL AND comment.user_id = ?',
+      sql: 'comment.parentId IS NOT NULL AND comment.userId = ?',
       param: `${user}`,
     };
   }

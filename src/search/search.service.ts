@@ -17,9 +17,9 @@ export const searchTags = async (options: SearchTagsOptions) => {
         tag.id,
         tag.name,
         (
-          SELECT COUNT(post_tag.tag_id)
+          SELECT COUNT(post_tag.tagId)
           FROM post_tag
-          WHERE tag.id = post_tag.tag_id
+          WHERE tag.id = post_tag.tagId
         ) as totalPosts
         FROM
           tag
@@ -59,12 +59,12 @@ export const searchUsers = async (options: SearchUsersOptions) => {
           (
             SELECT COUNT(post.id)
             FROM post
-            WHERE user.id = post.user_id
+            WHERE user.id = post.userId
           ) as totalPosts
         FROM
           user
         LEFT JOIN avatar
-          ON avatar.user_id = user.id
+          ON avatar.userId = user.id
         WHERE
           user.name LIKE ?
         GROUP BY

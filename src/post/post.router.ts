@@ -14,7 +14,9 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 获取内容列表
+/**
+ * 获取内容列表
+ */
 router.get(
   '/posts',
   sort,
@@ -26,7 +28,9 @@ router.get(
   postControllers.index,
 );
 
-// 创建内容
+/**
+ * 创建内容
+ */
 router.post(
   '/posts',
   authGuard,
@@ -39,7 +43,9 @@ router.post(
   postControllers.store,
 );
 
-// 更新内容
+/**
+ * 更新内容
+ */
 router.patch(
   '/posts/:postId',
   authGuard,
@@ -53,7 +59,9 @@ router.patch(
   postControllers.update,
 );
 
-// 删除内容
+/**
+ * 删除内容
+ */
 router.delete(
   '/posts/:postId',
   authGuard,
@@ -66,7 +74,9 @@ router.delete(
   postControllers.destroy,
 );
 
-// 添加内容标签
+/**
+ * 添加内容标签
+ */
 router.post(
   '/posts/:postId/tag',
   authGuard,
@@ -80,7 +90,9 @@ router.post(
   postControllers.storePostTag,
 );
 
-// 移除内容标签
+/**
+ * 移除内容标签
+ */
 router.delete(
   '/posts/:postId/tag',
   authGuard,
@@ -94,13 +106,15 @@ router.delete(
   postControllers.destroyPostTag,
 );
 
-// 单个内容
+/**
+ * 单个内容详情
+ */
 router.get(
-  '/posts/:post_id',
+  '/posts/:postId',
   accessLog({
     action: 'getPostById',
     resourceType: 'post',
-    resourceParamName: 'post_id',
+    resourceParamName: 'postId',
   }),
   postControllers.show,
 );

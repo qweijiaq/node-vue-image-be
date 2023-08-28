@@ -10,7 +10,9 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 上传文件
+/**
+ * 上传文件
+ */
 router.post(
   '/files',
   authGuard,
@@ -23,10 +25,14 @@ router.post(
   fileController.store,
 );
 
-// 文件服务
+/**
+ * 文件服务
+ */
 router.get('/files/:fileId/serve', fileController.serve);
 
-// 文件信息
+/**
+ * 文件信息
+ */
 router.get(
   '/files/:fileId/metadata',
   accessLog({

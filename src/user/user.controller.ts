@@ -3,7 +3,9 @@ import { UserModel } from './user.model';
 import * as userService from './user.service';
 import _ from 'lodash';
 
-// 创建用户
+/**
+ * 创建用户
+ */
 export const store = async (
   req: Request,
   res: Response,
@@ -20,7 +22,7 @@ export const store = async (
 };
 
 /**
- * 用户帐户
+ * 用户信息
  */
 export const show = async (
   request: Request,

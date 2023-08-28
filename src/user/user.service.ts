@@ -1,7 +1,9 @@
 import { connection } from '../app/database/mysql';
 import { UserModel } from './user.model';
 
-// 创建用户
+/**
+ * 创建用户
+ */
 export const createUser = async (user: UserModel) => {
   const statement = `
       INSERT INTO user
@@ -11,10 +13,6 @@ export const createUser = async (user: UserModel) => {
   const [data] = await connection.promise().query(statement, user);
   return data as any;
 };
-
-interface GetUserOptions {
-  password?: boolean;
-}
 
 /**
  * 获取用户
@@ -44,7 +42,7 @@ export const getUser = (condition: string) => {
       FROM
         user
       LEFT JOIN avatar
-        ON avatar.user_id = user.id
+        ON avatar.userId = user.id
       WHERE 
         ${condition} = ?
     `;

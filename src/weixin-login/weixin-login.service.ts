@@ -143,7 +143,7 @@ export const weixinLoginPostProcess = async (
 
       // 保存头像数据
       createAvatar({
-        user_id: user.id,
+        userId: user.id,
         mimetype,
         filename,
         size,

@@ -8,7 +8,9 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 发布评论
+/**
+ * 发表评论
+ */
 router.post(
   '/comments',
   authGuard,
@@ -20,9 +22,11 @@ router.post(
   commentControllers.store,
 );
 
-// 回复评论
+/**
+ * 回复评论
+ */
 router.post(
-  '/comments/:commentId',
+  '/comments/:commentId/reply',
   authGuard,
   accessLog({
     action: '回复评论',
@@ -33,7 +37,9 @@ router.post(
   commentControllers.reply,
 );
 
-// 修改评论
+/**
+ * 修改评论
+ */
 router.patch(
   '/comments/:commentId',
   authGuard,
@@ -47,7 +53,9 @@ router.patch(
   commentControllers.update,
 );
 
-// 删除评论
+/**
+ * 删除评论
+ */
 router.delete(
   '/comments/:commentId',
   authGuard,
@@ -60,7 +68,9 @@ router.delete(
   commentControllers.destroy,
 );
 
-// 评论列表
+/**
+ * 评论列表
+ */
 router.get(
   '/comments',
   filter,

@@ -11,19 +11,19 @@ export const storeUserDiggPost = async (
   next: NextFunction,
 ) => {
   // 准备数据
-  const { post_id } = request.params;
-  const { id: userId } = request.user;
-  const user_id = parseInt(userId, 10);
+  const { postId } = request.params;
+  const { id: uid } = request.user;
+  const userId = parseInt(uid, 10);
   const socketId = request.header('X-Socket-Id');
 
   // 点赞内容
   try {
-    const data = await createUserDiggPost(user_id, parseInt(post_id, 10));
+    const data = await createUserDiggPost(userId, parseInt(postId, 10));
 
     // 触发事件
     socketServer.emit('userDiggPostCreated', {
-      post_id: parseInt(post_id, 10),
-      user_id,
+      postId: parseInt(postId, 10),
+      userId,
       socketId,
     });
 
@@ -43,19 +43,19 @@ export const destroyUserDiggPost = async (
   next: NextFunction,
 ) => {
   // 准备数据
-  const { post_id } = request.params;
-  const { id: userId } = request.user;
-  const user_id = parseInt(userId, 10);
+  const { postId } = request.params;
+  const { id: uid } = request.user;
+  const userId = parseInt(uid, 10);
   const socketId = request.header('X-Socket-Id');
 
   // 取消点赞内容
   try {
-    const data = await deleteUserDiggPost(user_id, parseInt(post_id, 10));
+    const data = await deleteUserDiggPost(userId, parseInt(postId, 10));
 
     // 触发事件
     socketServer.emit('userDiggPostDeleted', {
-      post_id: parseInt(post_id, 10),
-      user_id,
+      postId: parseInt(postId, 10),
+      userId,
       socketId,
     });
 

@@ -8,7 +8,9 @@ import { getPostById, PostStatus } from '../post/post.service';
 import { getAuditLogByResource } from '../audit-log/audit-log.service';
 import { AuditLogStatus } from '../audit-log/audit-log.model';
 
-// 存储文件信息
+/**
+ * 存储文件信息
+ */
 export const createFile = async (file: FileModel) => {
   const statement = `
       INSERT INTO file
@@ -20,7 +22,9 @@ export const createFile = async (file: FileModel) => {
   return data;
 };
 
-// 按 ID 查找文件
+/**
+ * 按 ID 查找文件
+ */
 export const findFileById = async (fileId: number) => {
   // 准备查询
   const statement = `
@@ -34,7 +38,9 @@ export const findFileById = async (fileId: number) => {
   return data[0];
 };
 
-// 调整图像尺寸
+/**
+ * 调整图像尺寸
+ */
 export const imageResize = async (image: jimp, file: Express.Multer.File) => {
   // 图像尺寸
   const { imageSize } = image['_exif'];
@@ -76,7 +82,7 @@ export const getPostFiles = async (postId: number) => {
     FROM
       file
     WHERE
-      post_id = ?
+      postId = ?
   `;
 
   // 执行查询
@@ -125,12 +131,12 @@ interface FileAccessCControlOptions {
 
 export const fileAccessControl = async (options: FileAccessCControlOptions) => {
   const { file, currentUser } = options;
-  const ownFile = file.user_id === parseInt(currentUser.id, 10);
+  const ownFile = file.userId === parseInt(currentUser.id, 10);
   const isAdmin = parseInt(currentUser.id) === 1;
-  const parentPost = await getPostById(file.post_id, { currentUser });
+  const parentPost = await getPostById(file.postId, { currentUser });
 
   const [parentPostAuditLog] = await getAuditLogByResource({
-    resourceId: file.post_id,
+    resourceId: file.postId,
     resourceType: 'post',
   });
 

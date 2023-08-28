@@ -42,8 +42,11 @@ export const auditLogGuard = async (
 
     // 检查是否拥有资源
     try {
-      const user_id = parseInt(userId);
-      const ownResource = await possess({ resourceId, resourceType, user_id });
+      const ownResource = await possess({
+        resourceId,
+        resourceType,
+        userId: parseInt(userId, 10),
+      });
 
       if (!ownResource) {
         return next(new Error('USER_DOES_NOT_OWN_RESOURCE'));

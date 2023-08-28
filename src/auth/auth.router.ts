@@ -5,7 +5,9 @@ import { accessLog } from '../access-log/access-log.middleware';
 
 const router = express.Router();
 
-// 用户登录
+/**
+ * 用户登录
+ */
 router.post(
   '/login',
   ValidateLoginData,
@@ -17,7 +19,9 @@ router.post(
   authController.login,
 );
 
-// 验证登录
+/**
+ * 验证登录
+ */
 router.post('/auth/validate', authGuard, authController.validate);
 
 export default router;

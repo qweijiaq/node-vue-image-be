@@ -16,7 +16,7 @@ router.post(
   avatarProcessor,
   accessLog({
     action: '上传头像',
-    resourceType: 'avatar'
+    resourceType: 'avatar',
   }),
   avatarController.store,
 );
@@ -24,7 +24,7 @@ router.post(
 /**
  * 头像服务
  */
-router.get('/users/:user_id/avatar', avatarController.serve);
+router.get('/users/:userId/avatar', avatarController.serve);
 
 // 导出路由
 export default router;

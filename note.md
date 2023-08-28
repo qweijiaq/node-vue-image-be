@@ -17,7 +17,7 @@
   - rsa -in private.key -pubout -out public.key
   - exit
 
-后端技术栈：`Express` `TypeScript`
+后端技术栈：`Express` `TypeScript` `MySQL`
 
 应用架构：
 

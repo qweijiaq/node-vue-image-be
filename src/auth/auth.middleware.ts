@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction, response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as userService from '../user/user.service';
@@ -6,7 +6,9 @@ import { PUBLIC_KEY } from '../app/app.config';
 import { TokenPayload } from './auth.interface';
 import { possess } from './auth.service';
 
-// 验证用户登录数据
+/**
+ * 验证用户登录数据
+ */
 export const ValidateLoginData = async (
   req: Request,
   res: Response,
@@ -33,7 +35,9 @@ export const ValidateLoginData = async (
   next();
 };
 
-// 验证用户身份
+/**
+ * 验证用户身份
+ */
 export const authGuard = (req: Request, res: Response, next: NextFunction) => {
   if (req.user.id) {
     next();
@@ -79,7 +83,9 @@ export const currentUser = (
   next();
 };
 
-// 访问控制
+/**
+ * 访问控制
+ */
 interface AccessControlOptions {
   possession?: boolean;
 }
@@ -89,9 +95,9 @@ export const accessControl = (options: AccessControlOptions) => {
     const { possession } = options;
     // 当前用户 ID
     const { id: uid } = req.user;
-    const user_id = parseInt(uid, 10);
+    const userId = parseInt(uid, 10);
     // 放行管理员
-    if (user_id === 1) return next();
+    if (userId === 1) return next();
     // 准备资源
     const resourceIdParam = Object.keys(req.params)[0];
     const resourceType = resourceIdParam.replace('Id', '');
@@ -102,7 +108,7 @@ export const accessControl = (options: AccessControlOptions) => {
         const ownResource = await possess({
           resourceId,
           resourceType,
-          user_id,
+          userId,
         });
         if (!ownResource) {
           return next(new Error('USER_DOES_NOT_OWN_RESOURCE'));

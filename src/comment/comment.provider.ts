@@ -4,9 +4,9 @@
 export const sqlFragment = {
   leftJoinUser: `
       LEFT JOIN user
-        ON user.id = comment.user_id
+        ON user.id = comment.userId
       LEFT JOIN avatar
-        ON user.id = avatar.user_id
+        ON user.id = avatar.userId
     `,
   user: `
       JSON_OBJECT(
@@ -17,7 +17,7 @@ export const sqlFragment = {
     `,
   leftJoinPost: `
       LEFT JOIN post
-        ON post.id = comment.post_id
+        ON post.id = comment.postId
     `,
   post: `
       JSON_OBJECT(
@@ -35,7 +35,7 @@ export const sqlFragment = {
         FROM
           comment repliedComment
         WHERE
-          comment.parent_id = repliedComment.id
+          comment.parentId = repliedComment.id
       ) AS repliedComment
     `,
   totalReplies: `
@@ -45,7 +45,7 @@ export const sqlFragment = {
         FROM
           comment reply
         WHERE
-          reply.parent_id = comment.id
+          reply.parentId = comment.id
       ) AS totalReplies
     `,
 };

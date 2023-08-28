@@ -9,9 +9,9 @@ export const sqlFragment = {
     `,
   leftJoinUser: `
     LEFT JOIN user
-      ON user.id = post.user_id
+      ON user.id = post.userId
     LEFT JOIN avatar
-      ON user.id = avatar.user_id
+      ON user.id = avatar.userId
     `,
   totalComments: `
     (
@@ -20,17 +20,17 @@ export const sqlFragment = {
       FROM
         comment
       WHERE
-        comment.post_id = post.id
+        comment.postId = postId
     ) as totalComments
   `,
   leftJoinOneFile: `
     LEFT JOIN LATERAL (
         SELECT *
         FROM file
-        WHERE file.post_id = post.id
+        WHERE file.postId = post.id
         ORDER BY file.id DESC
         LIMIT 1
-    ) AS file ON post.id = file.post_id
+    ) AS file ON post.id = file.postId
     `,
   file: `
     CAST(
@@ -49,9 +49,9 @@ export const sqlFragment = {
     `,
   leftJoinTag: `
     LEFT JOIN
-        post_tag ON post_tag.post_id = post.id
+        post_tag ON post_tag.postId = post.id
     LEFT JOIN
-        tag ON post_tag.tag_id = tag.id
+        tag ON post_tag.tagId = tag.id
     `,
   tags: `
     CAST(
@@ -73,27 +73,27 @@ export const sqlFragment = {
     `,
   totalDiggs: `
     (
-        SELECT COUNT(user_digg_post.post_id)
+        SELECT COUNT(user_digg_post.postId)
         FROM user_digg_post
-        WHERE user_digg_post.post_id = post.id
+        WHERE user_digg_post.postId = post.id
     ) AS totalDiggs
     `,
   innerJoinUserDiggPost: `
     INNER JOIN user_digg_post
-        ON user_digg_post.post_id = post.id
+        ON user_digg_post.postId = post.id
     `,
   innerJoinOneFile: `
     INNER JOIN LATERAL (
         SELECT *
         FROM file
-        WHERE file.post_id = post.id
+        WHERE file.postId = post.id
         ORDER BY file.id DESC
         LIMIT 1
-    ) AS file ON post.id = file.post_id
+    ) AS file ON post.id = file.postId
     `,
   innerJoinFile: `
     INNER JOIN file
-        ON file.post_id = post.id
+        ON file.postId = post.id
     `,
   leftJoinOneAuditLog: `
     LEFT JOIN LATERAL (
