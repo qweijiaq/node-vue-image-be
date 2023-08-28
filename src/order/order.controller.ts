@@ -72,7 +72,7 @@ export const store = async (
       }
     }
     // 做出响应
-    res.status(201).send(data);
+    res.status(201).send(order);
   } catch (error) {
     next(error);
   }

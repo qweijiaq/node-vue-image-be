@@ -9,6 +9,7 @@ import { ProductStatus, ProductType } from '../product/product.model';
 import { getLicenseByOrderId, updateLicense } from '../license/license.service';
 import { LicenseStatus } from '../license/license.model';
 import { postProcessSubscription } from '../subscription/subscription.service';
+import { socketServer } from '../app/app.server';
 
 /**
  * 获取支付方法
@@ -77,6 +78,10 @@ export const paymentRecived = async (orderId: number, paymentResult: any) => {
   const isValidProduct = product && product.status === ProductStatus.published;
   if (!isValidProduct) return;
 
+  // SocketId
+  const socketId = paymentResult.attach || paymentResult.passbackParams;
+  const isValidSocketId = socketId && socketId !== 'NULL';
+
   // 许可产品
   if (product.type === ProductType.license) {
     const license = await getLicenseByOrderId(order.id);
@@ -86,10 +91,17 @@ export const paymentRecived = async (orderId: number, paymentResult: any) => {
     await updateLicense(license.id, {
       status: LicenseStatus.valid,
     });
+
+    if (isValidSocketId) {
+      socketServer.to(socketId).emit('licenseStatusChanged', {
+        ...license,
+        status: LicenseStatus.valid,
+      });
+    }
   }
 
   // 订阅产品
   if (product.type === ProductType.subscription) {
-    await postProcessSubscription({ order, product });
+    await postProcessSubscription({ order, product, socketId });
   }
 };

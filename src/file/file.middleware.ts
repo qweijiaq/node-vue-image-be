@@ -4,6 +4,7 @@ import jimp from 'jimp';
 import dayjs from 'dayjs';
 import { imageResize, findFileById } from './file.service';
 import { DATE_TIME_FORMAT } from '../app/app.config';
+import { socketServer } from '../app/app.server';
 import {
   getDownloadByToken,
   updateDownload,
@@ -89,7 +90,7 @@ export const fileDownloadGuard = async (
 ) => {
   // 准备数据
   const {
-    query: { token },
+    query: { token, socketId },
     params: { fileId },
   } = req;
 
@@ -117,6 +118,11 @@ export const fileDownloadGuard = async (
     await updateDownload(download.id, {
       used: dayjs().format(DATE_TIME_FORMAT),
     });
+
+    // 触发事件
+    if (socketId) {
+      socketServer.to(socketId as string).emit('fileDownloadUsed', download);
+    }
 
     // 设置请求体
     req.body = { download, file };
