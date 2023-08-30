@@ -6,7 +6,7 @@ import {
 } from './weixin-login.middleware';
 import { accessLog } from '../access-log/access-log.middleware';
 import { ValidateLoginData } from '../auth/auth.middleware';
-import { hashPassword } from '../user/user.middleware';
+import { hashPassword, ValidateUserData } from '../user/user.middleware';
 
 const router = express.Router();
 
@@ -42,7 +42,7 @@ router.post(
  */
 router.post(
   '/weixin-login/create-connect',
-  ValidateLoginData,
+  ValidateUserData,
   hashPassword,
   weixinLoginConnector({ isCreateUserRequired: true }),
   accessLog({

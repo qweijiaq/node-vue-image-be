@@ -4,7 +4,7 @@ export enum UserMetaType {
 
 export class UserMetaModel {
   id?: number;
-  userId?: number;
+  userId?: string;
   type?: UserMetaType;
   info?: string;
   created?: number;

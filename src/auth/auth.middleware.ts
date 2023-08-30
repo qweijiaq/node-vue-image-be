@@ -30,7 +30,7 @@ export const ValidateLoginData = async (
   req.body.user = user;
 
   // 在请求中添加用户
-  (req.user as any) = user;
+  req.user = user;
 
   next();
 };

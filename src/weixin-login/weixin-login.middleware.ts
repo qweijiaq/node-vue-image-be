@@ -27,16 +27,16 @@ export const weixinLoginGuard = async (
 
   try {
     // 微信访问令牌
-    const { access_token, openid, unionId } = await getWeixinAccessToken(code);
+    const { access_token, openid, unionid } = await getWeixinAccessToken(code);
 
     // 微信用户信息
     const weixinUserInfo = await getWeixinUserInfo({ access_token, openid });
 
     // 检查是否绑定
-    const userMeta = await getUserMetaByWeixinUnionId(unionId);
+    const userMeta = await getUserMetaByWeixinUnionId(unionid);
     if (userMeta) {
       const user = await getUserById(userMeta.userId);
-      (req.user as any) = user;
+      req.user = user;
       req.body = {
         user,
         weixinUserInfo,
@@ -50,6 +50,8 @@ export const weixinLoginGuard = async (
   } catch (error) {
     return next(error);
   }
+
+  next();
 };
 
 /**
@@ -74,7 +76,7 @@ export const weixinLoginConnector = (
     // 检查是否绑定过
     const { unionid } = weixinUserInfo;
     const userMeta = await getUserMetaByWeixinUnionId(unionid);
-    if (userMeta) return next(new Error('WEIXIN_ACCOUNT_ALREADY_CONNECTTED'));
+    if (userMeta) return next(new Error('WEIXIN_ACCOUNT_ALREADY_CONNECTED'));
 
     // 需要创建新用户
     if (isCreateUserRequired) {
@@ -82,19 +84,23 @@ export const weixinLoginConnector = (
       const data = await createUser({ name, password });
 
       // 获取新创建的用户
-      (user as any) = await getUserById(data.insertId);
+      user = await getUserById(data.insertId);
+
+      console.log(user.id);
 
       // 设置请求用户
       req.user = user;
-
-      // 关联账户
-      await createUserMeta({
-        userId: parseInt(user.id),
-        type: UserMetaType.weixinUserInfo,
-        info: JSON.stringify(weixinUserInfo),
-      });
     }
+
+    // 关联账户
+    await createUserMeta({
+      userId: user.id,
+      type: UserMetaType.weixinUserInfo,
+      info: JSON.stringify(weixinUserInfo),
+    });
   } catch (error) {
     return next(error);
   }
+
+  next();
 };

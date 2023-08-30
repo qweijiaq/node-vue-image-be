@@ -18,7 +18,7 @@ export interface WeixinAccessToken {
   refresh_token: string;
   openid: string;
   scope?: string;
-  unionId?: string;
+  unionid?: string;
 }
 
 export const getWeixinAccessToken = async (code: string) => {
@@ -55,7 +55,7 @@ export interface WeixinUserInfo {
   province?: string;
   country?: string;
   headimgurl?: string;
-  privileges?: Array<string>;
+  privilege?: Array<string>;
   unionid?: string;
 }
 
@@ -91,7 +91,7 @@ export const getWeixinUserInfo = async (options: GetWeixinUserInfoOptions) => {
  */
 export interface WeixinLoginPostProcessOptions {
   user?: UserData;
-  weixinUserInfo: WeixinUserInfo;
+  weixinUserInfo?: WeixinUserInfo;
 }
 
 export const weixinLoginPostProcess = async (
@@ -116,7 +116,7 @@ export const weixinLoginPostProcess = async (
     const size = response.headers['content-length'];
     const filename = unionid;
     const filePath = path.join('uploads', 'avatar', filename);
-    const fileResizePath = path.join('uploads', 'avatar', 'resized', filePath);
+    const fileResizePath = path.join('uploads', 'avatar', 'resized', filename);
 
     // 创建头像文件
     const fileWriter = fs.createWriteStream(filePath);
@@ -143,7 +143,7 @@ export const weixinLoginPostProcess = async (
 
       // 保存头像数据
       createAvatar({
-        userId: user.id,
+        userId: parseInt(user.id, 10),
         mimetype,
         filename,
         size,

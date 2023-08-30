@@ -3,6 +3,7 @@ import { signToken } from '../auth/auth.service';
 import { socketServer } from '../app/app.server';
 import { updateUserMeta } from '../user-meta/user-meta.service';
 import { weixinLoginPostProcess } from './weixin-login.service';
+import { UserData } from '../user/user.service';
 
 /**
  * 微信登录 用户授权重定向
@@ -28,7 +29,7 @@ export const weixinLoginCallback = async (
 
     // 更新用户 Meta
     await updateUserMeta(userMeta.id, {
-      info: JSON.parse(weixinUserInfo),
+      info: JSON.stringify(weixinUserInfo),
     });
 
     // 后期处理
@@ -101,12 +102,12 @@ export const weixinLoginCreateConnect = async (
 
     // 后期处理
     await weixinLoginPostProcess({
-      user: user as any,
+      user: user as UserData,
       weixinUserInfo,
     });
 
     // 做出响应
-    res.sendStatus(201).send({ user, token });
+    res.status(201).send({ user, token });
   } catch (error) {
     next(error);
   }

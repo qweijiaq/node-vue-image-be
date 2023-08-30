@@ -5,47 +5,51 @@ import { connection } from '../app/database/mysql';
  * 创建用户 Meta
  */
 export const createUserMeta = async (userMeta: UserMetaModel) => {
-    // 准备查询
-    const statement = `
+  console.log(userMeta);
+  // 准备查询
+  const statement = `
       INSERT INTO user_meta
       SET ? 
     `;
 
-    // 执行查询
-    const [data] = await connection.promise().query(statement, userMeta)
+  // 执行查询
+  const [data] = await connection.promise().query(statement, userMeta);
 
-    // 提供数据
-    return data as any;
-}
+  // 提供数据
+  return data as any;
+};
 
 /**
  * 更新用户 Meta
  */
-export const updateUserMeta = async (userMetaId: number, userMeta: UserMetaModel) => {
-    // 准备查询
-    const statement = `
+export const updateUserMeta = async (
+  userMetaId: number,
+  userMeta: UserMetaModel,
+) => {
+  // 准备查询
+  const statement = `
       UPDATE user_meta
       SET ?
       WHERE user_meta.id = ?
     `;
 
-    // SQL 参数
-    const params = [userMeta, userMetaId]
+  // SQL 参数
+  const params = [userMeta, userMetaId];
 
-    // 执行查询
-    const [data] = await connection.promise().query(statement, params)
+  // 执行查询
+  const [data] = await connection.promise().query(statement, params);
 
-    // 提供数据
-    return data as any;
-}
+  // 提供数据
+  return data as any;
+};
 
 /**
  * 按 Info 字段属性获取用户 Meta
  */
-const getUserMetaByInfoProp = (type: string, infoPropName) => {
-    return async (value: string | number) => {
-        // 准备查询
-        const statement = `
+const getUserMetaByInfoProp = (type: string, infoPropName: string) => {
+  return async (value: string | number) => {
+    // 准备查询
+    const statement = `
           SELECT
             *
           FROM
@@ -59,23 +63,23 @@ const getUserMetaByInfoProp = (type: string, infoPropName) => {
             1
         `;
 
-        // SQL 参数
-        const params = [type, value]
+    // SQL 参数
+    const params = [type, value];
 
-        // 执行查询
-        const [data] = await connection.promise().query(statement, params)
+    // 执行查询
+    const [data] = await connection.promise().query(statement, params);
 
-        // 提供数据
-        return data[0] ? data[0] as UserMetaModel : null
-    }
-}
+    // 提供数据
+    return data[0] ? (data[0] as UserMetaModel) : null;
+  };
+};
 
-export const getUserMetaByWeixinOpenId  = getUserMetaByInfoProp(
-    UserMetaType.weixinUserInfo,
-    'openid'
-)
+export const getUserMetaByWeixinOpenId = getUserMetaByInfoProp(
+  UserMetaType.weixinUserInfo,
+  'openid',
+);
 
-export const getUserMetaByWeixinUnionId  = getUserMetaByInfoProp(
-    UserMetaType.weixinUserInfo,
-    'unionid'
-)
+export const getUserMetaByWeixinUnionId = getUserMetaByInfoProp(
+  UserMetaType.weixinUserInfo,
+  'unionid',
+);

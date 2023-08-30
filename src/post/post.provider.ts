@@ -32,7 +32,7 @@ export const sqlFragment = {
       FROM
         comment
       WHERE
-        comment.postId = postId
+        comment.postId = post.id
     ) as totalComments
   `,
   leftJoinOneFile: `

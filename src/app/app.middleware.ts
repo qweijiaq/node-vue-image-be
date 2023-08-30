@@ -89,7 +89,7 @@ export const defaultErrorHandler = (
       statusCode = 403;
       message = '需要关联账户';
       break;
-    case 'WEIXIN_ACCOUNT_ALREADY_CONNECTTED':
+    case 'WEIXIN_ACCOUNT_ALREADY_CONNECTED':
       statusCode = 400;
       message = '您的微信已经绑定了本地应用账户';
       break;
