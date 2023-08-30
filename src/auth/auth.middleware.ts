@@ -88,16 +88,20 @@ export const currentUser = (
  */
 interface AccessControlOptions {
   possession?: boolean;
+  isAdmin?: boolean;
 }
 
 export const accessControl = (options: AccessControlOptions) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const { possession } = options;
+    const { possession, isAdmin } = options;
     // 当前用户 ID
     const { id: uid } = req.user;
     const userId = parseInt(uid, 10);
     // 放行管理员
     if (userId === 1) return next();
+    if (isAdmin) {
+      if (userId !== 1) return next(new Error('FORBIDDEN'));
+    }
     // 准备资源
     const resourceIdParam = Object.keys(req.params)[0];
     const resourceType = resourceIdParam.replace('Id', '');

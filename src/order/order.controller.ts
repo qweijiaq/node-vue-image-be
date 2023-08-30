@@ -1,5 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
-import { createOrder, updateOrder } from './order.service';
+import { Request, Response, NextFunction, response } from 'express';
+import {
+  createOrder,
+  getOrders,
+  updateOrder,
+  countOrders,
+} from './order.service';
 import { createOrderLog } from '../order-log/order-log.service';
 import { OrderLogAction } from '../order-log/order-log.model';
 import { ProductType } from '../product/product.model';
@@ -9,6 +14,7 @@ import { processSubscription } from '../subscription/subscription.service';
 import { PaymentName } from '../payment/payment.model';
 import { wxpay } from '../payment/wxpay/wxpay.service';
 import { alipay } from '../payment/alipay/alipay.service';
+import { getOrderLicenseItem, getOrderSubscriptionItem } from './order.service';
 
 /**
  * 创建订单
@@ -159,6 +165,74 @@ export const pay = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     res.send(order);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 订单列表
+ */
+export const index = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { filter, pagination } = req;
+
+  try {
+    const orders = await getOrders({
+      filter,
+      pagination,
+    });
+
+    const ordersCount = await countOrders({
+      filter,
+    });
+
+    // 设置响应头部
+    res.header('X-Total-Count', ordersCount.count);
+
+    // 作出响应
+    res.send({ orders, ordersCount });
+
+    res.send({ orders });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 订单许可项目
+ */
+export const licenseItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { orderId } = req.params;
+
+  try {
+    const item = await getOrderLicenseItem(parseInt(orderId, 10));
+    res.send(item);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * 订单订阅项目
+ */
+export const subscriptionItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { type } = req.query;
+
+  try {
+    const item = await getOrderSubscriptionItem(type as string);
+    res.send(item);
   } catch (error) {
     next(error);
   }

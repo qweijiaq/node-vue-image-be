@@ -77,3 +77,6 @@ ALIPAY_APP_PRIVATE_KEY =
   '-----BEGIN RSA PRIVATE KEY-----\n' +
   ALIPAY_APP_PRIVATE_KEY +
   '\n-----END RSA PRIVATE KEY-----';
+
+// 订单
+export const ORDERS_PER_PAGE = parseInt(process.env['ORDERS_PER_PAGE'], 10);
