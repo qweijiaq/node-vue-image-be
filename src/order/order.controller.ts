@@ -138,8 +138,10 @@ export const pay = async (req: Request, res: Response, next: NextFunction) => {
 
     if (order.payment === PaymentName.wxpay) {
       const wxpayResult = await wxpay(order, req);
-
-      data.codeUrl = wxpayResult.codeUrl;
+      if (wxpayResult instanceof Error) {
+        throw new Error('NO_Support_WeixinPay');
+      }
+      data.codeUrl = (wxpayResult as any).codeUrl;
       data.payment = PaymentName.wxpay;
 
       await createOrderLog({
@@ -152,6 +154,9 @@ export const pay = async (req: Request, res: Response, next: NextFunction) => {
 
     if (order.payment === PaymentName.alipay) {
       const alipayResult = await alipay(order, req);
+      if (alipayResult instanceof Error) {
+        throw new Error('NO_Support_AliPay');
+      }
       data.codeUrl = alipayResult.paymentUrl;
       data.payment = PaymentName.alipay;
       data.offsetUrl = alipayResult.pagePayRequestUrl;

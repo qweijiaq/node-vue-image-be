@@ -28,6 +28,9 @@ export const alipayRequestParmas = (
 ) => {
   // 应用 ID
   const appId = ALIPAY_APP_ID;
+  if (!appId) {
+    return new Error();
+  }
 
   // 编码格式
   const charset = 'utf-8';
@@ -166,12 +169,18 @@ export const alipay = async (order: OrderModel, req: Request) => {
   const wapPayRequestParams = alipayRequestParmas(order, AlipayMethod.wap, req);
 
   // 签名
-  const pagePaySign = alipaySign(pagePayRequestParams);
-  const wapPaySign = alipaySign(wapPayRequestParams);
+  const pagePaySign = alipaySign(pagePayRequestParams as AlipayRequestParams);
+  const wapPaySign = alipaySign(wapPayRequestParams as AlipayRequestParams);
 
   // 请求地址
-  const pagePayRequestUrl = alipayRequestUrl(pagePayRequestParams, pagePaySign);
-  const wapPayRequestUrl = alipayRequestUrl(wapPayRequestParams, wapPaySign);
+  const pagePayRequestUrl = alipayRequestUrl(
+    pagePayRequestParams as AlipayRequestParams,
+    pagePaySign,
+  );
+  const wapPayRequestUrl = alipayRequestUrl(
+    wapPayRequestParams as AlipayRequestParams,
+    wapPaySign,
+  );
 
   // 随机字符
   const token = uid();

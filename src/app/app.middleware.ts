@@ -109,6 +109,14 @@ export const defaultErrorHandler = (
       statusCode = 400;
       message = '支付已过期';
       break;
+    case 'NO_Support_WeixinPay':
+      statusCode = 400;
+      message = '暂不支持微信支付，如有需要，可联系 2112025700@qq.com';
+      break;
+    case 'NO_Support_AliPay':
+      statusCode = 400;
+      message = '暂不支持支付宝支付，如有需要，可联系 2112025700@qq.com';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题～～';

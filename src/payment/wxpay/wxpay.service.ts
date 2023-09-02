@@ -76,6 +76,10 @@ export const wxpay = async (order: OrderModel, req: Request) => {
   // 微信支付商户号
   const mchId = WXPAY_MCH_ID;
 
+  if (!appId && !mchId) {
+    return new Error();
+  }
+
   // 订单号
   const outTradeNo = `${uid()}_${order.id}`;
 

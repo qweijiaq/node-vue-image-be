@@ -24,7 +24,7 @@ export const getPayments = async (options: GetPaymentsOptions = {}) => {
   // 准备查询
   const statement = `
       SELECT
-        payment.id
+        payment.id,
         payment.name,
         payment.title,
         payment.description,
