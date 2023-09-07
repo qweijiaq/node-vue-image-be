@@ -81,10 +81,6 @@ export const defaultErrorHandler = (
       statusCode = 403;
       message = '没有权限访问';
       break;
-    case 'USER_DOES_NOT_OWN_RESOURCE':
-      statusCode = 403;
-      message = '您无法处理这个请求';
-      break;
     case 'CONNECT_ACCCOUNT_REQUIRED':
       statusCode = 403;
       message = '需要关联账户';

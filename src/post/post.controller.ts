@@ -142,7 +142,7 @@ export const storePostTag = async (
   try {
     tag = await getTagByName(name);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 
   // 找到标签，验证内容标签
@@ -151,7 +151,7 @@ export const storePostTag = async (
       const postTag = await postHasTag(parseInt(postId, 10), tag.id);
       if (postTag) return next(new Error('POST_ALREADY_HAS_THIS_TAG'));
     } catch (err) {
-      next(err);
+      return next(err);
     }
   }
 
@@ -168,7 +168,7 @@ export const storePostTag = async (
   // 给内容打上标签
   try {
     await createPostTag(parseInt(postId, 10), tag.id);
-    res.send('添加内容标签成功');
+    res.status(201).send('添加内容标签成功');
   } catch (err) {
     return next(err);
   }
@@ -187,7 +187,7 @@ export const destroyPostTag = async (
 
   try {
     await deletePostTag(parseInt(postId, 10), tagId);
-    res.send('移除内容标签成功');
+    res.status(200).send('移除内容标签成功');
   } catch (err) {
     next(err);
   }

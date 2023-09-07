@@ -88,7 +88,7 @@ export const serve = async (
     res.sendFile(filename, {
       root,
       headers: {
-        'Content-type': file.mimetype,
+        'Content-Type': file.mimetype,
       },
     });
   } catch (err) {
