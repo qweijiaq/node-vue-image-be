@@ -16,3 +16,12 @@ export const connection = mysql.createConnection({
   password: MYSQL_PASSWORD,
   database: MYSQL_DATABASE,
 });
+
+setInterval(() => {
+  console.log('ping...');
+  connection.ping(err => {
+    if (err) {
+      console.log('ping error: ' + JSON.stringify(err));
+    }
+  });
+}, 3600000);
