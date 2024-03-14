@@ -35,6 +35,7 @@ export const ValidateLoginData = async (
   // 在请求中添加用户
   req.user = user;
 
+  // 下一步
   next();
 };
 
@@ -83,6 +84,7 @@ export const currentUser = (
   // 在请求里添加当前用户
   req.user = user;
 
+  // 下一步
   next();
 };
 
@@ -96,19 +98,25 @@ interface AccessControlOptions {
 
 export const accessControl = (options: AccessControlOptions) => {
   return async (req: Request, res: Response, next: NextFunction) => {
+    // 解构选项
     const { possession, isAdmin } = options;
+
     // 当前用户 ID
     const { id: uid } = req.user;
     const userId = parseInt(uid, 10);
+
     // 放行管理员
     if (userId === 1) return next();
+
     if (isAdmin) {
       if (userId !== 1) return next(new Error('FORBIDDEN'));
     }
+
     // 准备资源
     const resourceIdParam = Object.keys(req.params)[0];
     const resourceType = resourceIdParam.replace('Id', '');
     const resourceId = parseInt(req.params[resourceIdParam], 10);
+
     // 检查资源拥有权
     if (possession) {
       try {
@@ -125,6 +133,7 @@ export const accessControl = (options: AccessControlOptions) => {
       }
     }
 
+    // 下一步
     next();
   };
 };

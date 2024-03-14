@@ -32,16 +32,19 @@ interface PossessOptions {
 export const possess = async (options: PossessOptions) => {
   // 准备选项
   const { resourceId, resourceType, userId } = options;
+
   // 准备查询
   const statement = `
       SELECT COUNT(${resourceType}.id) as count
       FROM ${resourceType}
       WHERE ${resourceType}.id = ? AND userId = ?
     `;
+
   //检查拥有权
   const [data] = await connection
     .promise()
     .query(statement, [resourceId, userId]);
+
   // 提供检查结果
   return data[0].count ? true : false;
 };
