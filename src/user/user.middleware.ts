@@ -11,14 +11,18 @@ export const ValidateUserData = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { name, password } = req.body;
 
+  // 验证必填数据
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
   if (!password) return next(new Error('PASSWORD_IS_REQUIRED'));
 
+  // 检查用户名是否已存在
   const user = await userService.getUserByName(name);
   if (user) return next(new Error('USER_ALREADY_EXIST'));
 
+  // 下一步
   next();
 };
 
@@ -30,8 +34,13 @@ export const hashPassword = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { password } = req.body;
+
+  // 加密
   req.body.password = await bcrypt.hash(password, 10); // 10 表示 hash 的强度
+
+  // 下一步
   next();
 };
 
