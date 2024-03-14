@@ -1,3 +1,8 @@
+// cd config
+// genrsa -out private.key 4096
+// rsa -in private.key -pubout -out public.key
+// exit
+
 const fs = require('fs');
 const path = require('path');
 

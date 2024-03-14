@@ -14,12 +14,14 @@ export const login = async (
     user: { id, name },
   } = req.body;
 
+  // JWT token 可以在线解析，因此不要把敏感数据放入 payload，或者对其进行加密
   const payload = { id, name };
 
   try {
     // 签发令牌
     const token = signToken({ payload });
-    // 作出响应
+
+    // 做出响应
     res.send({ id, name, token });
   } catch (err) {
     next(err);
