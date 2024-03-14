@@ -9,6 +9,7 @@ export const login = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const {
     user: { id, name },
   } = req.body;

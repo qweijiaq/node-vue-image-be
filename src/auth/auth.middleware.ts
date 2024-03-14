@@ -14,15 +14,18 @@ export const ValidateLoginData = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { name, password } = req.body;
 
+  // 验证必填数据
   if (!name) return next(new Error('NAME_IS_REQUIRED'));
   if (!password) return next(new Error('PASSWORD_IS_REQUIRED'));
 
+  // 验证用户是否存在
   const user = await userService.getUserByName(name, { password: true });
   if (!user) return next(new Error('USER_DOES_NOT_EXIST'));
 
-  // 验证用户密码
+  // 验证密码是否匹配
   const matched = await bcrypt.compare(password, user.password);
   if (!matched) return next(new Error('PASSWORD_DOES_NOT_MATCH'));
 
