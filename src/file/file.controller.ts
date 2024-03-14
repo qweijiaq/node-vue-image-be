@@ -15,9 +15,11 @@ export const store = async (
   // 当前用户
   const { id: uid } = req.user;
   const userId = parseInt(uid, 10);
+
   // 所属内容
   const { post: pid } = req.query;
   const postId = parseInt(pid as string, 10);
+
   // 文件信息
   const fileInfo = _.pick(req.file, [
     'originalname',
@@ -27,6 +29,7 @@ export const store = async (
   ]);
 
   try {
+    // 保存文件信息
     const data = await createFile({
       ...fileInfo,
       userId,
@@ -34,6 +37,7 @@ export const store = async (
       ...req.fileMetadata,
     });
 
+    // 做出响应
     res.status(201).send(data);
   } catch (err) {
     next(err);
@@ -86,7 +90,7 @@ export const serve = async (
 
     // 作出响应
     res.sendFile(filename, {
-      root,
+      root: 'uploads',
       headers: {
         'Content-Type': file.mimetype,
       },
