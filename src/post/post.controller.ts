@@ -35,7 +35,7 @@ export const index = async (
   try {
     // 统计内容数量
     const totalCount = await getPostsTotalCount({
-      filter: req.filter,
+      filter: req.filters,
       status,
       auditStatus,
     });
@@ -47,7 +47,7 @@ export const index = async (
   try {
     const posts = await getPosts({
       sort: req.sort,
-      filter: req.filter,
+      filter: req.filters,
       pagination: req.pagination,
       currentUser: req.user,
       status,

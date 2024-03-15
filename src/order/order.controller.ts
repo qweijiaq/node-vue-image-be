@@ -183,16 +183,16 @@ export const index = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const { filter, pagination } = req;
+  const { filters, pagination } = req;
 
   try {
     const orders = await getOrders({
-      filter,
+      filters,
       pagination,
     });
 
     const ordersCount = await countOrders({
-      filter,
+      filters,
     });
 
     // 设置响应头部

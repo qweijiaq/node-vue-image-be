@@ -12,14 +12,14 @@ export const filter = async (
   const { post, user, action } = req.query;
 
   // 默认的过滤
-  req.filter = {
+  req.filters = {
     name: 'default',
     sql: 'comment.parentId IS NULL',
   };
 
   // 内容的评论
   if (post && !user && !action) {
-    req.filter = {
+    req.filters = {
       name: 'postComments',
       sql: 'comment.parentId IS NULL AND comment.postId = ?',
       param: `${post}`,
@@ -28,7 +28,7 @@ export const filter = async (
 
   // 用户的评论
   if (user && action == 'published' && !post) {
-    req.filter = {
+    req.filters = {
       name: 'userPublished',
       sql: 'comment.parentId IS NULL AND comment.userId = ?',
       param: `${user}`,
@@ -37,7 +37,7 @@ export const filter = async (
 
   // 用户的回复
   if (user && action == 'replied' && !post) {
-    req.filter = {
+    req.filters = {
       name: 'userReplied',
       sql: 'comment.parentId IS NOT NULL AND comment.userId = ?',
       param: `${user}`,

@@ -67,14 +67,14 @@ export const updateOrder = async (orderId: number, order: OrderModel) => {
  * 调取订单列表
  */
 export interface GetOrdersOptions {
-  filter: GetPostsOptionsFilter;
+  filters: GetPostsOptionsFilter;
   pagination?: GetPostsOptionsPagination;
 }
 
 export const getOrders = async (options: GetOrdersOptions) => {
   const {
     pagination: { limit, offset },
-    filter,
+    filters,
   } = options;
 
   // 准备查询
@@ -86,7 +86,7 @@ export const getOrders = async (options: GetOrdersOptions) => {
     FROM
       \`order\`
     ${orderSqlFragment.leftJoinTables}
-    WHERE ${filter.sql}
+    WHERE ${filters.sql}
     GROUP BY order.id
     ORDER BY order.id DESC
     LIMIT ?
@@ -94,7 +94,7 @@ export const getOrders = async (options: GetOrdersOptions) => {
   `;
 
   // 查询参数
-  const params = [...filter.params, limit, offset];
+  const params = [...filters.params, limit, offset];
 
   // 执行查询
   const [data] = await connection.promise().query(statement, params);
@@ -107,7 +107,7 @@ export const getOrders = async (options: GetOrdersOptions) => {
  * 统计订单
  */
 export const countOrders = async (options: GetOrdersOptions) => {
-  const { filter } = options;
+  const { filters } = options;
 
   // 准备查询
   const statement = `
@@ -119,13 +119,13 @@ export const countOrders = async (options: GetOrdersOptions) => {
         order.totalAmount
       FROM \`order\`
       ${orderSqlFragment.leftJoinTables}
-      WHERE ${filter.sql}
+      WHERE ${filters.sql}
       GROUP BY order.id
     ) AS count
   `;
 
   // 执行查询
-  const [data] = await connection.promise().query(statement, filter.params);
+  const [data] = await connection.promise().query(statement, filters.params);
 
   // 提供数据
   return data[0] as any;

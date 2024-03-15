@@ -7,7 +7,7 @@ import { AccessCountListItem } from '../../src/dashboard/dashboard.provider';
  */
 
 interface GetAccessCountsOptions {
-  filter: {
+  filters: {
     name: string;
     sql?: string;
     param?: string;
@@ -16,7 +16,7 @@ interface GetAccessCountsOptions {
 
 export const getAccessCounts = async (options: GetAccessCountsOptions) => {
   const {
-    filter: { sql: whereDateTimeRange },
+    filters: { sql: whereDateTimeRange },
   } = options;
 
   // 允许的动作
@@ -71,7 +71,7 @@ interface AccessCount {
 
 interface GetAccessCountByActionOptions {
   action: string;
-  filter: {
+  filters: {
     name: string;
     sql?: string;
     param?: string;
@@ -82,7 +82,7 @@ export const getAccessCountByAction = async (
   options: GetAccessCountByActionOptions,
 ) => {
   const {
-    filter: { sql: whereDateTimeRange, param: dateTimeFormat },
+    filters: { sql: whereDateTimeRange, param: dateTimeFormat },
     action,
   } = options;
 

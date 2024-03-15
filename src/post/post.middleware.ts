@@ -55,14 +55,14 @@ export const filter = async (
   } = req.query;
 
   // 设置默认的过滤 -- 主要是用于 WHERE 条件的占位
-  req.filter = {
+  req.filters = {
     name: 'default',
     sql: 'post.id IS NOT NULL',
   };
 
   // 按标签名过滤
   if (tag && !user && !action) {
-    req.filter = {
+    req.filters = {
       name: 'tagName',
       sql: 'tag.name = ?',
       param: `${tag}`,
@@ -71,7 +71,7 @@ export const filter = async (
 
   // 过滤出用户发布的内容
   if (user && action == 'published' && !tag) {
-    req.filter = {
+    req.filters = {
       name: 'userPublished',
       sql: 'user.id = ?',
       param: `${user}`,
@@ -80,7 +80,7 @@ export const filter = async (
 
   // 过滤出用户赞过的内容
   if (user && action == 'digged' && !tag) {
-    req.filter = {
+    req.filters = {
       name: 'userDigged',
       sql: 'user_digg_post.userId = ?',
       param: `${user}`,
@@ -89,7 +89,7 @@ export const filter = async (
 
   // 过滤出用某种相机拍摄的内容
   if (cameraMake && cameraModel) {
-    req.filter = {
+    req.filters = {
       name: 'camera',
       sql: `file.metadata->'$.Make' = ? AND file.metadata->'$.Model' = ?`,
       params: [`${cameraMake}`, `${cameraModel}`],
@@ -98,7 +98,7 @@ export const filter = async (
 
   // 过滤出用某种镜头拍摄的内容
   if (lensMake && lensModel) {
-    req.filter = {
+    req.filters = {
       name: 'lens',
       sql: `file.metadata->'$.LensMake' = ? AND file.metadata->'$.LensModel' = ?`,
       params: [`${lensMake}`, `${lensModel}`],
@@ -173,13 +173,13 @@ export const modelSwitch = async (
 
   if (isManageMode) {
     if (isAdminMode) {
-      req.filter = {
+      req.filters = {
         name: 'adminManagePosts',
         sql: 'post.id IS NOT NULL',
         param: '',
       };
     } else {
-      req.filter = {
+      req.filters = {
         name: 'userManagePosts',
         sql: 'user.id = ?',
         param: `${req.user.id}`,

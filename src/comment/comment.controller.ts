@@ -194,7 +194,7 @@ export const index = async (
 ) => {
   // 统计评论数量
   try {
-    const totalCount = await getCommentsTotalCount({ filter: req.filter });
+    const totalCount = await getCommentsTotalCount({ filter: req.filters });
 
     // 设置响应头部
     res.header('X-Total-Count', totalCount);
@@ -205,7 +205,7 @@ export const index = async (
   // 获取评论列表
   try {
     const comments = await getComments({
-      filter: req.filter,
+      filter: req.filters,
       pagination: req.pagination,
     });
 

@@ -41,7 +41,7 @@ export const accessCountsFilter = async (
       break;
   }
 
-  req.filter = filter;
+  req.filters = filter;
 
   next();
 };

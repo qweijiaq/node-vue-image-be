@@ -10,10 +10,10 @@ export const accessCountIndex = async (
   next: NextFunction,
 ) => {
   // 准备数据
-  const { filter } = req;
+  const { filters } = req;
 
   try {
-    const accessCounts = await getAccessCounts({ filter });
+    const accessCounts = await getAccessCounts({ filters });
     res.send(accessCounts);
   } catch (error) {
     next(error);
@@ -31,11 +31,11 @@ export const accessCountShow = async (
   // 准备数据
   const {
     params: { action },
-    filter,
+    filters,
   } = req;
 
   try {
-    const accessCount = await getAccessCountByAction({ action, filter });
+    const accessCount = await getAccessCountByAction({ action, filters });
     res.send(accessCount);
   } catch (error) {
     next(error);

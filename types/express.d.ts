@@ -10,7 +10,7 @@ declare global {
       user: TokenPayload;
       fileMetadata: { width?: number; height?: number; metadata?: {} };
       sort: string;
-      filter: GetPostsOptionsFilter;
+      filters: GetPostsOptionsFilter;
       pagination: GetPostsOptionsPagination;
     }
   }

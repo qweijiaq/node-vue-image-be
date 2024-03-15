@@ -243,7 +243,7 @@ export const orderIndexFilter = async (
     }
   });
 
-  req.filter = {
+  req.filters = {
     name: 'orderIndex',
     sql: filterSql,
     params,
