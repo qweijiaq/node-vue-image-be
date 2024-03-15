@@ -134,11 +134,13 @@ export const storePostTag = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { postId } = req.params;
   const { name } = req.body;
 
   let tag: TagModel;
 
+  // 查找标签
   try {
     tag = await getTagByName(name);
   } catch (err) {
@@ -155,7 +157,7 @@ export const storePostTag = async (
     }
   }
 
-  // 如果没有找到该标签
+  // 如果没有找到该标签，创建标签
   if (!tag) {
     try {
       const data = await createTag({ name });
@@ -182,9 +184,11 @@ export const destroyPostTag = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { postId } = req.params;
   const { tagId } = req.body;
 
+  // 移除内容标签
   try {
     await deletePostTag(parseInt(postId, 10), tagId);
     res.status(200).send('移除内容标签成功');

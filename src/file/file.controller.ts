@@ -90,7 +90,7 @@ export const serve = async (
 
     // 作出响应
     res.sendFile(filename, {
-      root: 'uploads',
+      root,
       headers: {
         'Content-Type': file.mimetype,
       },
@@ -108,16 +108,20 @@ export const metadata = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 文件 ID
   const { fileId } = req.params;
 
   // 当前用户
   const { user: currentUser } = req;
 
   try {
+    // 查询文件数据
     const file = await findFileById(parseInt(fileId, 10));
     // 检查权限
     await fileAccessControl({ file, currentUser });
+    // 准备响应数据
     const data = _.pick(file, ['id', 'size', 'width', 'height', 'metadata']);
+    // 做出响应
     res.send(data);
   } catch (err) {
     next(err);

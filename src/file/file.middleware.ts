@@ -66,8 +66,10 @@ export const fileProcessor = async (
     return next(err);
   }
 
+  // 准备文件数据
   const { imageSize, tags } = image['_exif'];
 
+  // 在请求中添加文件数据
   req.fileMetadata = {
     width: imageSize.width,
     height: imageSize.height,
@@ -77,6 +79,7 @@ export const fileProcessor = async (
   // 调整图像尺寸
   imageResize(image, req.file);
 
+  // 下一步
   next();
 };
 
