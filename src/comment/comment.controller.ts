@@ -19,6 +19,7 @@ export const store = async (
   res: Response,
   next: NextFunction,
 ) => {
+  // 准备数据
   const { id: uid } = req.user;
   const { content, postId } = req.body;
   const socketId = req.header('X-Socket-Id');

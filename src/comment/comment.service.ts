@@ -10,12 +10,16 @@ import {
  * 创建评论
  */
 export const createComment = async (comment: CommentModel) => {
+  // 准备数据
   const statement = `
       INSERT INTO comment
       SET ?
     `;
+
+  // 执行查询
   const [data] = await connection.promise().query(statement, comment);
 
+  // 提供数据
   return data as any;
 };
 
